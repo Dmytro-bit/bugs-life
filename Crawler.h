@@ -6,20 +6,25 @@
 #define CRAWLER_H
 
 #include <list>
-
+#include <string>
+using namespace std;
 struct Position {
     int x;
     int y;
 };
 
 enum Direction {
-    North,
+    North = 1,
     East,
     South,
     West
 };
 
 class Crawler {
+
+
+
+
 private:
     int id{};
     Position position{};
@@ -36,6 +41,8 @@ public:
     static void move();
 
     static bool isWayBlocked();
+
+    static string getBugType();
 
     [[nodiscard]] int getId() const;
 
@@ -58,6 +65,8 @@ public:
     void setSize(int size);
 
     void setAlive(bool alive);
+
+    [[nodiscard]] string directionToString() const;
 };
 
 #endif //CRAWLER_H

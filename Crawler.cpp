@@ -30,25 +30,45 @@ Direction Crawler::getDirection() const { return direction; }
 int Crawler::getSize() const { return size; }
 
 bool Crawler::isAlive() const { return alive; }
+string Crawler::getBugType() {
+    return "Crawler";
+}
 
 std::list<Position> Crawler::getPath() { return path; }
 
-void Crawler::setId(int id) {
+void Crawler::setId(const int id) {
     this->id = id;
 }
 
-void Crawler::setPosition(Position position) {
+string Crawler::directionToString() const {
+    switch (this->getDirection()) {
+            case North:
+                return "North";
+            case East:
+                return "East";
+            case South:
+                return "South";
+            case West:
+                return "West";
+            default:
+                return "Direction undefined";
+        }
+}
+
+
+void Crawler::setPosition(const Position position) {
     this->position = position;
 }
 
-void Crawler::setDirection(Direction direction) {
+void Crawler::setDirection(const Direction direction) {
     this->direction = direction;
 }
 
-void Crawler::setSize(int size) {
+void Crawler::setSize(const int size) {
     this->size = size;
 }
 
-void Crawler::setAlive(bool alive) {
+void Crawler::setAlive(const bool alive) {
     this->alive = alive;
 }
+

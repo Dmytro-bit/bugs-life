@@ -5,4 +5,6 @@ set(CMAKE_CXX_STANDARD 20)
 
 add_executable(bug_life main.cpp
         Crawler.cpp
-        Crawler.h)
+        Crawler.h
+        Board.cpp
+        Board.h)
