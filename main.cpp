@@ -46,6 +46,14 @@ void loadBugs(std::vector<Crawler *> &bugs) {
     }
 }
 
+void findBug(const Board &board) {
+    int id;
+    cout << "Please enter the bug's identification number you want to search: ";
+    cin >> id ;
+    board.findBugById(id);
+
+
+}
 
 
 int main() {
@@ -54,6 +62,7 @@ int main() {
     loadBugs(bugs);
     board.setBugs(bugs);
     board.displayBugs();
+    findBug(board);
 
     return 0;
 }

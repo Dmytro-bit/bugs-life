@@ -25,7 +25,7 @@ vector<Crawler> Board::getBugs() const {
 }
 
 void Board::displayBugs() const {
-    cout << "Bug list:" << endl;
+    cout << "Bugs list:" << endl;
     cout << left
          << setw(5)  << "ID"
          << setw(10) << "Bug"
@@ -45,6 +45,21 @@ void Board::displayBugs() const {
              << setw(12) << bug->directionToString()
              << setw(8)  << (bug->isAlive() ? "Alive" : "Dead")
              << endl;
+    }
+}
+
+void Board::findBugById(const int &id) const {
+    vector<Crawler> bugs = this->getBugs();
+    bool bugFound = false;
+    for (const Crawler &bug: bugs) {
+        if (bug.getId() == id) {
+            bugFound = true;
+            bug.displayBug();
+            break;
+        }
+    }
+    if (!bugFound) {
+        cout << "Bug not found" << endl;
     }
 }
 

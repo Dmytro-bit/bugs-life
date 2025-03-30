@@ -21,6 +21,8 @@ public:
 
     void displayBugs() const;
 
+    void findBugById(const int &id) const;
+
 private:
     vector<Crawler*> bugs;
 

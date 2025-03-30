@@ -4,6 +4,11 @@
 
 #include "Crawler.h"
 
+#include <iomanip>
+#include <ios>
+#include <iostream>
+#include <sstream>
+
 
 Crawler::Crawler() {
 }
@@ -53,6 +58,19 @@ string Crawler::directionToString() const {
             default:
                 return "Direction undefined";
         }
+}
+
+void Crawler::displayBug() const {
+    ostringstream positionStream;
+    positionStream << "(" << getPosition().x << "," << getPosition().y << ")";
+    cout << left
+         << setw(5)  << getId()
+         << setw(10) << getBugType()
+         << setw(15) << positionStream.str()
+         << setw(6)  << getSize()
+         << setw(12) << directionToString()
+         << setw(8)  << (isAlive() ? "Alive" : "Dead")
+         << endl;
 }
 
 

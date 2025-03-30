@@ -67,6 +67,8 @@ public:
     void setAlive(bool alive);
 
     [[nodiscard]] string directionToString() const;
+
+    void displayBug() const;
 };
 
 #endif //CRAWLER_H
