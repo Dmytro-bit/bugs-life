@@ -45,7 +45,7 @@ public:
 
     [[nodiscard]] Position getPosition() const;
 
-    std::list<Position> getPath();
+    [[nodiscard]] std::list<Position> getPath() const;
 
     [[nodiscard]] Direction getDirection() const;
 

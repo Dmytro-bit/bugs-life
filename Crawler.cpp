@@ -35,7 +35,7 @@ string Crawler::getBugType() {
     return "Crawler";
 }
 
-std::list<Position> Crawler::getPath() { return path; }
+std::list<Position> Crawler::getPath() const { return path; }
 
 void Crawler::setId(const int id) {
     this->id = id;

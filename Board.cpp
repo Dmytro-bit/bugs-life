@@ -81,3 +81,17 @@ void Board::tap() {
 void Board::setBugs(vector<Crawler *> bugs) {
     this->bugs = std::move(bugs);
 }
+
+
+void Board::displayHistory() const {
+    for (const Crawler *bug: bugs) {
+        cout << bug->getId() << " " << Crawler::getBugType() << " Path: ";
+
+        const list<Position> &history = bug->getPath();
+
+        for (const Position &pos: history) {
+            cout << "(" << pos.x << "," << pos.y << ")";
+        }
+        cout << endl;
+    }
+}

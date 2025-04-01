@@ -38,6 +38,7 @@ public:
     void findBugById(const int &id) const;
 
     void tap();
+    void displayHistory() const;
 };
 
 

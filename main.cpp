@@ -69,5 +69,7 @@ int main() {
         cout << endl;
     }
 
+    board.displayHistory();
+
     return 0;
 }
