@@ -8,6 +8,7 @@
 #include <list>
 #include <string>
 using namespace std;
+
 struct Position {
     int x;
     int y;
@@ -21,10 +22,6 @@ enum Direction {
 };
 
 class Crawler {
-
-
-
-
 private:
     int id{};
     Position position{};
@@ -38,9 +35,9 @@ public:
 
     Crawler(int id, Position position, Direction direction, int size);
 
-    static void move();
+    void move();
 
-    static bool isWayBlocked();
+    bool isWayBlocked();
 
     static string getBugType();
 

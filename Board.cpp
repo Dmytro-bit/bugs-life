@@ -9,11 +9,13 @@
 //
 // Created by vladikslon on 3/30/25.
 //
+
 Board::Board() = default;
 
-Board::Board(const vector<Crawler *> &bugs) {
-    this->bugs = bugs;
+Board::Board(const unordered_map<int, vector<Crawler *> > &cells,
+             const vector<Crawler *> &bugs): cells(cells), bugs(bugs) {
 }
+
 
 vector<Crawler> Board::getBugs() const {
     vector<Crawler> bugsCopies;
@@ -27,24 +29,24 @@ vector<Crawler> Board::getBugs() const {
 void Board::displayBugs() const {
     cout << "Bugs list:" << endl;
     cout << left
-         << setw(5)  << "ID"
-         << setw(10) << "Bug"
-         << setw(15) << "Position"
-         << setw(6)  << "Size"
-         << setw(12) << "Direction"
-         << setw(8)  << "Status"
-         << endl;
+            << setw(5) << "ID"
+            << setw(10) << "Bug"
+            << setw(15) << "Position"
+            << setw(6) << "Size"
+            << setw(12) << "Direction"
+            << setw(8) << "Status"
+            << endl;
     for (const Crawler *bug: bugs) {
         ostringstream positionStream;
         positionStream << "(" << bug->getPosition().x << "," << bug->getPosition().y << ")";
         cout << left
-             << setw(5)  << bug->getId()
-             << setw(10) << bug->getBugType()
-             << setw(15) << positionStream.str()
-             << setw(6)  << bug->getSize()
-             << setw(12) << bug->directionToString()
-             << setw(8)  << (bug->isAlive() ? "Alive" : "Dead")
-             << endl;
+                << setw(5) << bug->getId()
+                << setw(10) << bug->getBugType()
+                << setw(15) << positionStream.str()
+                << setw(6) << bug->getSize()
+                << setw(12) << bug->directionToString()
+                << setw(8) << (bug->isAlive() ? "Alive" : "Dead")
+                << endl;
     }
 }
 
@@ -60,6 +62,19 @@ void Board::findBugById(const int &id) const {
     }
     if (!bugFound) {
         cout << "Bug not found" << endl;
+    }
+}
+
+void Board::tap() {
+    cells.clear();
+
+    for (Crawler *bug: bugs) {
+        if (bug->isAlive()) {
+            bug->move();
+            Position pos = bug->getPosition();
+            int cellKey = pos.x * size_y + pos.y;
+            cells[cellKey].push_back(bug);
+        }
     }
 }
 
