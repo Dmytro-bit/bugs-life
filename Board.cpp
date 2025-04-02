@@ -27,7 +27,6 @@ vector<Crawler> Board::getBugs() const {
 }
 
 
-
 void Board::displayBugs() const {
     cout << "Bugs list:" << endl;
     cout << left
@@ -68,20 +67,51 @@ void Board::findBugById(const int &id) const {
 }
 
 void Board::displayCells() {
-    cout << "Cells:" << endl;
-    for (const auto& [cell, bugPointers]: this->cells) {
-        vector<Crawler> display_bugs;
-        for (const Crawler* bug: bugPointers) {
-            display_bugs.push_back(*bug);
+    vector<Crawler *> bugsInCell;
+    int x = 0, y = 0, posY, posX;
+    for (const auto &bug: bugs) {
+        bool bugFound = false;
+        Crawler c = *bug;
+        Position position = c.getPosition();
+        int cellKey = position.x + position.y * size_x;
+        for (auto &bugInCell: cells[cellKey]) {
+            if (bugInCell == bug) {
+                bugFound = true;
+                break;
+            }
         }
-        cout << cell;
-        for (const Crawler &bug: display_bugs) {
-            cout << ", ";
-            cout << bug.getId() << " ";
-            cout << bug.getBugType() << "";
+        if (!bugFound) {
+            cells[cellKey].push_back(bug);
+        }
+    }
+    cout << "Cells:" << endl;
+    for (int i = 0; i <= size_x; i++) {
+        for (int j = 0; j <= size_y; j++) {
+            bool bugFound = false;
+            for (const auto &[cell, values]: this->cells) {
+                posY = (cell - values.at(0)->getPosition().x) / 10;
+                posX = (cell - posY * 10);
+                if (posX == i && posY == j) {
+                    bugFound = true;
+                    cout << "(" << posX << "," << posY << ") ";
+
+                    for (const Crawler *bugPointer: values) {
+                        Crawler bug = *bugPointer;
+                        // int cellKey = pos.y * size_x + pos.x;
+
+                        cout << "| ";
+                        cout << bug.getId() << " ";
+                        cout << bug.getBugType() << ";  ";
+                    }
+                }
+            }
+            if (!bugFound) {
+                cout << "(" << i << "," << j << ") ";
+                cout << "! Empty";
+            }
+            cout << endl;
 
         }
-        cout << endl;
     }
 }
 
