@@ -70,17 +70,18 @@ void Board::findBugById(const int &id) const {
 void Board::displayCells() {
     cout << "Cells:" << endl;
     for (const auto& [cell, bugPointers]: this->cells) {
-        vector<Crawler> bugs;
+        vector<Crawler> display_bugs;
         for (const Crawler* bug: bugPointers) {
-            bugs.push_back(*bug);
+            display_bugs.push_back(*bug);
         }
         cout << cell;
-        for (const Crawler &bug: bugs) {
+        for (const Crawler &bug: display_bugs) {
             cout << ", ";
             cout << bug.getId() << " ";
-            cout << bug.getBugType() << ";  ";
-            cout << endl;
+            cout << bug.getBugType() << "";
+
         }
+        cout << endl;
     }
 }
 
