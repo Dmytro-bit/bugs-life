@@ -26,6 +26,8 @@ vector<Crawler> Board::getBugs() const {
     return bugsCopies;
 }
 
+
+
 void Board::displayBugs() const {
     cout << "Bugs list:" << endl;
     cout << left
@@ -65,6 +67,23 @@ void Board::findBugById(const int &id) const {
     }
 }
 
+void Board::displayCells() {
+    cout << "Cells:" << endl;
+    for (const auto& [cell, bugPointers]: this->cells) {
+        vector<Crawler> bugs;
+        for (const Crawler* bug: bugPointers) {
+            bugs.push_back(*bug);
+        }
+        cout << cell;
+        for (const Crawler &bug: bugs) {
+            cout << ", ";
+            cout << bug.getId() << " ";
+            cout << bug.getBugType() << ";  ";
+            cout << endl;
+        }
+    }
+}
+
 void Board::tap() {
     cells.clear();
 
@@ -72,7 +91,7 @@ void Board::tap() {
         if (bug->isAlive()) {
             bug->move();
             Position pos = bug->getPosition();
-            int cellKey = pos.x * size_y + pos.y;
+            int cellKey = pos.y * size_x + pos.x;
             cells[cellKey].push_back(bug);
         }
     }

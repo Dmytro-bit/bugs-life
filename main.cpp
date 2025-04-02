@@ -68,8 +68,10 @@ int main() {
         board.displayBugs();
         cout << endl;
     }
-
+    // board.getCells();
     board.displayHistory();
+    board.displayBugs();
 
+    board.displayCells();
     return 0;
 }

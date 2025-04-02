@@ -116,7 +116,7 @@ void Crawler::move() {
     if (!alive)
         return;
 
-    path.push_back(position);
+
     srand(time(NULL));
     while (this->isWayBlocked()) {
         int newDir = (rand() % 4) + 1;
@@ -137,4 +137,5 @@ void Crawler::move() {
             this->setPosition({this->getPosition().x - 1, this->getPosition().y});
             break;
     }
+    path.push_back(position);
 }

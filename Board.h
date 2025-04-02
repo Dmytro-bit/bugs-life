@@ -30,12 +30,14 @@ public:
 
     void setCells(const unordered_map<int, vector<Crawler *> >);
 
-    void getCells();
+    // unordered_map<int, vector<Crawler *> >  getCells();
 
 
     void displayBugs() const;
 
     void findBugById(const int &id) const;
+
+    void displayCells();
 
     void tap();
     void displayHistory() const;
