@@ -59,19 +59,18 @@ int main() {
     std::vector<Crawler *> bugs;
     loadBugs(bugs);
     board.setBugs(bugs);
-    board.displayBugs();
+    // board.displayBugs();
     // findBug(board);
 
-    for (int i = 0; i < 30; i++) {
-        cout << "Tap the board: " << i << endl;
+    for (int i = 0; i < 10000000; i++) {
+        // cout << "Tap the board: " << i << endl;
         board.tap();
-        board.displayBugs();
-        cout << endl;
+        board.fight();
+        // board.displayBugs()
     }
     // board.getCells();
-    board.displayHistory();
-    board.displayBugs();
-
+    // board.displayHistory();
     board.displayCells();
+    board.displayBugs();
     return 0;
 }

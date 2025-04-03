@@ -68,49 +68,34 @@ void Board::findBugById(const int &id) const {
 
 void Board::displayCells() {
     vector<Crawler *> bugsInCell;
-    int x = 0, y = 0, posY, posX;
-    for (const auto &bug: bugs) {
-        bool bugFound = false;
-        Crawler c = *bug;
-        Position position = c.getPosition();
-        int cellKey = position.x + position.y * size_x;
-        for (auto &bugInCell: cells[cellKey]) {
-            if (bugInCell == bug) {
-                bugFound = true;
-                break;
-            }
-        }
-        if (!bugFound) {
-            cells[cellKey].push_back(bug);
-        }
-    }
+    int posY, posX;
     cout << "Cells:" << endl;
     for (int i = 0; i <= size_x; i++) {
         for (int j = 0; j <= size_y; j++) {
-            bool bugFound = false;
-            for (const auto &[cell, values]: this->cells) {
-                posY = (cell - values.at(0)->getPosition().x) / 10;
-                posX = (cell - posY * 10);
-                if (posX == i && posY == j) {
-                    bugFound = true;
-                    cout << "(" << posX << "," << posY << ") ";
+            int index = 0;
 
-                    for (const Crawler *bugPointer: values) {
-                        Crawler bug = *bugPointer;
-                        // int cellKey = pos.y * size_x + pos.x;
+            cout << "(" << i << "," << j << ") ";
 
+            if (cells.contains(index)) {
+                vector<Crawler *> bugs = cells.at(index);
+                for (const Crawler *bugPointer: bugs) {
+                    // int cellKey = pos.y * size_x + pos.x;
+                    if (bugPointer->isAlive()) {
                         cout << "| ";
-                        cout << bug.getId() << " ";
-                        cout << bug.getBugType() << ";  ";
+                        cout << bugPointer->getId() << " ";
+                        cout << bugPointer->getBugType() << ";  ";
                     }
                 }
             }
-            if (!bugFound) {
+            // for (const auto &[cell, values]: this->cells) {
+            //     posY = (cell - values.at(0)->getPosition().x) / 10;
+            //     posX = (cell - posY * 10);
+            // }
+
                 cout << "(" << i << "," << j << ") ";
                 cout << "! Empty";
-            }
-            cout << endl;
 
+            cout << endl;
         }
     }
 }
@@ -123,31 +108,77 @@ void Board::tap() {
             bug->move();
             Position pos = bug->getPosition();
             int cellKey = pos.y * size_x + pos.x;
-            if (!cells[cellKey].empty() && cells.at(cellKey).at(0)->isAlive()) {
-                if ( cells.at(cellKey).at(0)->getSize() > bug->getSize()) {
-                    cells.at(cellKey).at(0)->setSize(bug->getSize()+cells.at(cellKey).at(0)->getSize());
-                    bug->setAlive(false);
-                }else if (cells.at(cellKey).at(0)->getSize() < bug->getSize()) {
-                    bug->setSize(cells.at(cellKey).at(0)->getSize()+bug->getSize());
-                    cells.at(cellKey).at(0)->setAlive(false);
-                    cells.at(cellKey)[0] = bug;
-                } else {
-                    srandom(time(nullptr));
-                    if (random() % 2 == 0) {
-                        cells.at(cellKey).at(0)->setSize(bug->getSize()+cells.at(cellKey).at(0)->getSize());
-                        bug->setAlive(false);
-                    } else {
-                        bug->setSize(cells.at(cellKey).at(0)->getSize()+bug->getSize());
-                        cells.at(cellKey).at(0)->setAlive(false);
-                        cells.at(cellKey)[0] = bug;
-                    }
-                }
-            }else {
-                cells[cellKey].push_back(bug);
-            }
+
+            cells[cellKey].push_back(bug);
+            fight();
         }
     }
 }
+
+void Board::fight() {
+    // Position pos = bug->getPosition();
+    // int cellKey = pos.y * size_x + pos.x;
+    // Crawler* bugInCell;
+    // if (!cells[cellKey].empty()) {
+    //     bugInCell = cells[cellKey][0];
+    //
+    //     if (bugInCell->getSize() > bug->getSize()) {
+    //         bugInCell->setSize(bug->getSize() + bugInCell->getSize());
+    //         bug->setAlive(false);
+    //     } else if (bugInCell->getSize() < bug->getSize()) {
+    //         bug->setSize(bugInCell->getSize() + bug->getSize());
+    //         bugInCell->setAlive(false);
+    //         cells[cellKey].clear();
+    //         cells.at(cellKey).push_back(bug);
+    //     } else {
+    //         srandom(time(nullptr));
+    //         if (random() % 2 == 0) {
+    //             bugInCell->setSize(bug->getSize() + bugInCell->getSize());
+    //             bug->setAlive(false);
+    //         } else {
+    //             bug->setSize(bugInCell->getSize() + bug->getSize());
+    //             bugInCell->setAlive(false);
+    //             cells[cellKey].clear();
+    //             cells[cellKey].push_back(bug);
+    //         }
+    //     }
+    // } else if (bug->isAlive()) {
+    //     cells[cellKey].push_back(bug);
+    // }
+    srand(time(NULL));
+    Crawler *pBigBug = nullptr;
+    vector<Crawler *> sameSizeBugs;
+    int total_bugs_size = 0;
+
+    for (const auto &[cell, values]: this->cells) {
+        if (values.size() <= 1) continue;
+
+        for (Crawler *bugPointer: values) {
+            if (pBigBug == nullptr || bugPointer->getSize() > pBigBug->getSize()) {
+                pBigBug = bugPointer;
+            } else if (bugPointer->getSize() == pBigBug->getSize()) {
+                sameSizeBugs.push_back(bugPointer);
+            }
+            total_bugs_size += bugPointer->getSize();
+        }
+
+
+        if (!sameSizeBugs.empty()) {
+            pBigBug = sameSizeBugs[rand() % sameSizeBugs.size()];
+        }
+
+        for (Crawler *bugPointer: values) {
+            if (bugPointer != pBigBug) {
+                bugPointer->setAlive(false);
+            }
+        }
+        cells[cell].clear();
+        int big_bug_size = total_bugs_size;
+        pBigBug->setSize(big_bug_size);
+        cells[cell].push_back(pBigBug);
+    }
+}
+
 
 void Board::setBugs(vector<Crawler *> bugs) {
     this->bugs = std::move(bugs);

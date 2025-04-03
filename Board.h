@@ -14,15 +14,15 @@ class Board {
 private:
     vector<Crawler *> bugs;
     std::unordered_map<int, vector<Crawler *> > cells;
-    int size_x = 10;
-    int size_y = 10;
+    const int size_x = 10;
+    const int size_y = 10;
 
 public:
     Board();
 
     Board(const unordered_map<int, vector<Crawler *> > &cells, const vector<Crawler *> &bugs);
 
-
+    void fight();
     [[nodiscard]] vector<Crawler> getBugs() const;
 
 
