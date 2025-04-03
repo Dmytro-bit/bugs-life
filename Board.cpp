@@ -123,7 +123,28 @@ void Board::tap() {
             bug->move();
             Position pos = bug->getPosition();
             int cellKey = pos.y * size_x + pos.x;
-            cells[cellKey].push_back(bug);
+            if (!cells[cellKey].empty() && cells.at(cellKey).at(0)->isAlive()) {
+                if ( cells.at(cellKey).at(0)->getSize() > bug->getSize()) {
+                    cells.at(cellKey).at(0)->setSize(bug->getSize()+cells.at(cellKey).at(0)->getSize());
+                    bug->setAlive(false);
+                }else if (cells.at(cellKey).at(0)->getSize() < bug->getSize()) {
+                    bug->setSize(cells.at(cellKey).at(0)->getSize()+bug->getSize());
+                    cells.at(cellKey).at(0)->setAlive(false);
+                    cells.at(cellKey)[0] = bug;
+                } else {
+                    srandom(time(nullptr));
+                    if (random() % 2 == 0) {
+                        cells.at(cellKey).at(0)->setSize(bug->getSize()+cells.at(cellKey).at(0)->getSize());
+                        bug->setAlive(false);
+                    } else {
+                        bug->setSize(cells.at(cellKey).at(0)->getSize()+bug->getSize());
+                        cells.at(cellKey).at(0)->setAlive(false);
+                        cells.at(cellKey)[0] = bug;
+                    }
+                }
+            }else {
+                cells[cellKey].push_back(bug);
+            }
         }
     }
 }
