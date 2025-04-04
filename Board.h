@@ -46,6 +46,8 @@ public:
     void displayHistory() const;
 
     void runSimulation();
+
+    void writeHistoryToFile() const;
 };
 
 

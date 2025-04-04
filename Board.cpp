@@ -1,5 +1,6 @@
 #include "Board.h"
-
+#include <fstream>
+#include <sstream>
 #include <iomanip>
 #include <iostream>
 #include <utility>
@@ -178,4 +179,22 @@ void Board::runSimulation() {
         this_thread::sleep_for(chrono::milliseconds(100));
     }
     displayBugs();
+}
+
+void Board::writeHistoryToFile() const {
+    ofstream file("history.txt");
+    for (const Crawler *bug: bugs) {
+        file << bug->getId() << " " << Crawler::getBugType() << " Path: ";
+        const list<Position> &history = bug->getPath();
+        for (const Position &pos: history) {
+            file << "(" << pos.x << "," << pos.y << ")";
+        }
+        if (bug->isAlive()) {
+            file << " Eaten by: None";
+        } else {
+            file << " Eaten by: " << bug->getEatenBy();
+        }
+        file << endl;
+    }
+    file.close();
 }

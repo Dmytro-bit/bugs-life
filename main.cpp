@@ -96,6 +96,7 @@ void menu(Board &board) {
                 board.runSimulation();
                 break;
             case '8':
+                board.writeHistoryToFile();
                 break;
             default:
                 cout << "Invalid choice" << endl;
