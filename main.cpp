@@ -55,22 +55,12 @@ void findBug(const Board &board) {
 
 
 int main() {
+    srand(time(NULL));
     Board board;
     std::vector<Crawler *> bugs;
     loadBugs(bugs);
     board.setBugs(bugs);
-    // board.displayBugs();
-    // findBug(board);
 
-    for (int i = 0; i < 10000000; i++) {
-        // cout << "Tap the board: " << i << endl;
-        board.tap();
-        board.fight();
-        // board.displayBugs()
-    }
-    // board.getCells();
-    // board.displayHistory();
-    board.displayCells();
-    board.displayBugs();
+    board.runSimulation();
     return 0;
 }

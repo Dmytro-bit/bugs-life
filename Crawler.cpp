@@ -66,7 +66,7 @@ void Crawler::displayBug() const {
             << setw(6) << getSize()
             << setw(12) << directionToString()
             << setw(8) << (isAlive() ? "Alive" : "Dead")
-            << endl;
+            << setw(8) << getEatenBy() << endl;
 }
 
 bool Crawler::isWayBlocked() {
@@ -112,12 +112,18 @@ void Crawler::setAlive(const bool alive) {
     this->alive = alive;
 }
 
+void Crawler::setEatenBy(int id) {
+    this->eaten_by = id;
+}
+
+int Crawler::getEatenBy() const {
+    return eaten_by;
+}
+
 void Crawler::move() {
     if (!alive)
         return;
 
-
-    srand(time(NULL));
     while (this->isWayBlocked()) {
         int newDir = (rand() % 4) + 1;
         direction = static_cast<Direction>(newDir);

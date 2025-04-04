@@ -47,7 +47,7 @@ void Board::displayBugs() const {
                 << setw(6) << bug->getSize()
                 << setw(12) << bug->directionToString()
                 << setw(8) << (bug->isAlive() ? "Alive" : "Dead")
-                << endl;
+                << setw(8) << bug->getEatenBy() << endl;
     }
 }
 
@@ -87,13 +87,8 @@ void Board::displayCells() {
                     }
                 }
             }
-            // for (const auto &[cell, values]: this->cells) {
-            //     posY = (cell - values.at(0)->getPosition().x) / 10;
-            //     posX = (cell - posY * 10);
-            // }
-
-                cout << "(" << i << "," << j << ") ";
-                cout << "! Empty";
+            cout << "(" << i << "," << j << ") ";
+            cout << "! Empty";
 
             cout << endl;
         }
@@ -110,71 +105,45 @@ void Board::tap() {
             int cellKey = pos.y * size_x + pos.x;
 
             cells[cellKey].push_back(bug);
-            fight();
         }
     }
 }
 
 void Board::fight() {
-    // Position pos = bug->getPosition();
-    // int cellKey = pos.y * size_x + pos.x;
-    // Crawler* bugInCell;
-    // if (!cells[cellKey].empty()) {
-    //     bugInCell = cells[cellKey][0];
-    //
-    //     if (bugInCell->getSize() > bug->getSize()) {
-    //         bugInCell->setSize(bug->getSize() + bugInCell->getSize());
-    //         bug->setAlive(false);
-    //     } else if (bugInCell->getSize() < bug->getSize()) {
-    //         bug->setSize(bugInCell->getSize() + bug->getSize());
-    //         bugInCell->setAlive(false);
-    //         cells[cellKey].clear();
-    //         cells.at(cellKey).push_back(bug);
-    //     } else {
-    //         srandom(time(nullptr));
-    //         if (random() % 2 == 0) {
-    //             bugInCell->setSize(bug->getSize() + bugInCell->getSize());
-    //             bug->setAlive(false);
-    //         } else {
-    //             bug->setSize(bugInCell->getSize() + bug->getSize());
-    //             bugInCell->setAlive(false);
-    //             cells[cellKey].clear();
-    //             cells[cellKey].push_back(bug);
-    //         }
-    //     }
-    // } else if (bug->isAlive()) {
-    //     cells[cellKey].push_back(bug);
-    // }
-    srand(time(NULL));
-    Crawler *pBigBug = nullptr;
-    vector<Crawler *> sameSizeBugs;
-    int total_bugs_size = 0;
-
     for (const auto &[cell, values]: this->cells) {
         if (values.size() <= 1) continue;
 
+        Crawler *pBigBug = nullptr;
+        vector<Crawler *> sameSizeBugs;
+        int total_bugs_size = 0;
+        int dead_bugs = -1;
+
         for (Crawler *bugPointer: values) {
             if (pBigBug == nullptr || bugPointer->getSize() > pBigBug->getSize()) {
+                sameSizeBugs.clear();
                 pBigBug = bugPointer;
             } else if (bugPointer->getSize() == pBigBug->getSize()) {
                 sameSizeBugs.push_back(bugPointer);
             }
             total_bugs_size += bugPointer->getSize();
+            ++dead_bugs;
         }
 
 
         if (!sameSizeBugs.empty()) {
+            sameSizeBugs.push_back(pBigBug);
             pBigBug = sameSizeBugs[rand() % sameSizeBugs.size()];
         }
 
         for (Crawler *bugPointer: values) {
             if (bugPointer != pBigBug) {
                 bugPointer->setAlive(false);
+                bugPointer->setEatenBy(pBigBug->getId());
             }
         }
+        deadBugs += dead_bugs;
         cells[cell].clear();
-        int big_bug_size = total_bugs_size;
-        pBigBug->setSize(big_bug_size);
+        pBigBug->setSize(total_bugs_size);
         cells[cell].push_back(pBigBug);
     }
 }
@@ -196,4 +165,13 @@ void Board::displayHistory() const {
         }
         cout << endl;
     }
+}
+
+void Board::runSimulation() {
+    while (deadBugs != bugs.size() - 1) {
+        tap();
+        fight();
+    }
+    displayCells();
+    displayBugs();
 }

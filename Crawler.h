@@ -29,6 +29,7 @@ private:
     int size{};
     bool alive = true;
     std::list<Position> path;
+    int eaten_by = -1;
 
 public:
     Crawler();
@@ -62,6 +63,10 @@ public:
     void setSize(int size);
 
     void setAlive(bool alive);
+
+    void setEatenBy(int id) ;
+
+    [[nodiscard]] int getEatenBy() const;
 
     [[nodiscard]] string directionToString() const;
 
