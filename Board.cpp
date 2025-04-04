@@ -214,4 +214,5 @@ void Board::writeHistoryToFile() const {
         file << endl;
     }
     file.close();
+    cout << "History saved to: " << filename << endl;
 }
