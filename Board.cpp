@@ -183,7 +183,7 @@ void Board::runSimulation() {
     while (deadBugs != bugs.size() - 1) {
         tap();
         fight();
-        // this_thread::sleep_for(chrono::milliseconds(100));
+        this_thread::sleep_for(chrono::milliseconds(100));
     }
     displayBugs();
 }

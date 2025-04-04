@@ -27,13 +27,7 @@ public:
 
     [[nodiscard]] vector<Crawler> getBugs() const;
 
-
     void setBugs(vector<Crawler *> bugs);
-
-    void setCells(const unordered_map<int, vector<Crawler *> >);
-
-    // unordered_map<int, vector<Crawler *> >  getCells();
-
 
     void displayBugs() const;
 
