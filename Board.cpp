@@ -4,6 +4,8 @@
 #include <iostream>
 #include <utility>
 #include <vector>
+#include <chrono>
+#include <thread>
 
 #include "Crawler.h"
 //
@@ -72,7 +74,7 @@ void Board::displayCells() {
     cout << "Cells:" << endl;
     for (int i = 0; i <= size_x; i++) {
         for (int j = 0; j <= size_y; j++) {
-            int index = 0;
+            int index = j * size_x + i;
 
             cout << "(" << i << "," << j << ") ";
 
@@ -86,9 +88,9 @@ void Board::displayCells() {
                         cout << bugPointer->getBugType() << ";  ";
                     }
                 }
+            } else {
+                cout << "! Empty";
             }
-            cout << "(" << i << "," << j << ") ";
-            cout << "! Empty";
 
             cout << endl;
         }
@@ -163,6 +165,8 @@ void Board::displayHistory() const {
         for (const Position &pos: history) {
             cout << "(" << pos.x << "," << pos.y << ")";
         }
+
+        cout << " Eaten by: " << bug->getEatenBy();
         cout << endl;
     }
 }
@@ -171,7 +175,7 @@ void Board::runSimulation() {
     while (deadBugs != bugs.size() - 1) {
         tap();
         fight();
+        this_thread::sleep_for(chrono::milliseconds(100));
     }
-    displayCells();
     displayBugs();
 }
