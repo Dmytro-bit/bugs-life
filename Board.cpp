@@ -6,6 +6,7 @@
 #include <utility>
 #include <vector>
 #include <chrono>
+#include <ctime>
 #include <thread>
 
 #include "Crawler.h"
@@ -39,6 +40,7 @@ void Board::displayBugs() const {
             << setw(6) << "Size"
             << setw(12) << "Direction"
             << setw(8) << "Status"
+            << setw(8) << "Eaten by"
             << endl;
     for (const Crawler *bug: bugs) {
         ostringstream positionStream;
@@ -50,7 +52,7 @@ void Board::displayBugs() const {
                 << setw(6) << bug->getSize()
                 << setw(12) << bug->directionToString()
                 << setw(8) << (bug->isAlive() ? "Alive" : "Dead")
-                << setw(8) << bug->getEatenBy() << endl;
+                << setw(10) << bug->getEatenBy() << endl;
     }
 }
 
@@ -167,7 +169,12 @@ void Board::displayHistory() const {
             cout << "(" << pos.x << "," << pos.y << ")";
         }
 
-        cout << " Eaten by: " << bug->getEatenBy();
+        cout << " Eaten by: ";
+        if (bug->isAlive()) {
+            cout << "None";
+        } else {
+            cout << bug->getEatenBy();
+        }
         cout << endl;
     }
 }
@@ -176,13 +183,23 @@ void Board::runSimulation() {
     while (deadBugs != bugs.size() - 1) {
         tap();
         fight();
-        this_thread::sleep_for(chrono::milliseconds(100));
+        // this_thread::sleep_for(chrono::milliseconds(100));
     }
     displayBugs();
 }
 
 void Board::writeHistoryToFile() const {
-    ofstream file("history.txt");
+    time_t now = std::time(nullptr);
+    tm *localTime = std::localtime(&now);
+
+    char timestamp[20];
+    strftime(timestamp, sizeof(timestamp), "%Y-%m-%d_%H:%M:%S", localTime);
+
+
+    string filename = "bugs_life_history_" + string(timestamp) + ".out";
+
+
+    ofstream file(filename);
     for (const Crawler *bug: bugs) {
         file << bug->getId() << " " << Crawler::getBugType() << " Path: ";
         const list<Position> &history = bug->getPath();
