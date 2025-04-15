@@ -7,21 +7,14 @@
 
 #include <list>
 #include <string>
+
+#include "Bug.h"
+#include "utils/Direction.h"
+#include "utils/Position.h"
 using namespace std;
 
-struct Position {
-    int x;
-    int y;
-};
 
-enum Direction {
-    North = 1,
-    East,
-    South,
-    West
-};
-
-class Crawler {
+class Crawler: public Bug{
 private:
     int id{};
     Position position{};
@@ -64,7 +57,7 @@ public:
 
     void setAlive(bool alive);
 
-    void setEatenBy(int id) ;
+    void setEatenBy(int id);
 
     [[nodiscard]] int getEatenBy() const;
 

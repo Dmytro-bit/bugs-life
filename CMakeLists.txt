@@ -3,8 +3,9 @@ project(bug_life)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(bug_life main.cpp
-        Crawler.cpp
-        Crawler.h
-        Board.cpp
-        Board.h)
+include_directories(include)
+
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS src/*.cpp)
+file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS include/*.h)
+
+add_executable(bug_life ${SOURCES} ${HEADERS})
