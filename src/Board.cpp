@@ -10,14 +10,21 @@
 #include <thread>
 
 #include "Crawler.h"
+#include "Hopper.h"
 //
 // Created by vladikslon on 3/30/25.
 //
 
 Board::Board() = default;
 
-Board::Board(const unordered_map<int, vector<Crawler *> > &cells,
-             const vector<Crawler *> &bugs): cells(cells), bugs(bugs) {
+Board::~Board() {
+    for (const auto *bug: bugs) {
+        delete bug;
+    }
+}
+
+Board::Board(const unordered_map<int, vector<Bug *> > &cells,
+             const vector<Bug *> &bugs): cells(cells), bugs(bugs) {
 }
 
 int Board::getBoardSizeX() {
@@ -28,17 +35,17 @@ int Board::getBoardSizeY() {
     return size_y;
 }
 
-void Board::setBugs(vector<Crawler *> bugs) {
+void Board::setBugs(vector<Bug *> bugs) {
     this->bugs = std::move(bugs);
 }
 
 
-vector<Crawler> Board::getBugs() const {
-    vector<Crawler> bugsCopies;
-    bugsCopies.reserve(bugs.size());
-    for (const auto bug: bugs) {
-        bugsCopies.push_back(*bug);
-    }
+vector<Bug> Board::getBugs() const {
+    vector<Bug> bugsCopies;
+    // bugsCopies.reserve(bugs.size());
+    // for (const auto bug: bugs) {
+    //     bugsCopies.push_back(*bug);
+    // }
     return bugsCopies;
 }
 
@@ -54,7 +61,7 @@ void Board::displayBugs() const {
             << setw(8) << "Status"
             << setw(8) << "Eaten by"
             << endl;
-    for (const Crawler *bug: bugs) {
+    for (Bug *bug: bugs) {
         ostringstream positionStream;
         positionStream << "(" << bug->getPosition().x << "," << bug->getPosition().y << ")";
         cout << left
@@ -69,12 +76,11 @@ void Board::displayBugs() const {
 }
 
 void Board::findBugById(const int &id) const {
-    vector<Crawler> bugs = this->getBugs();
     bool bugFound = false;
-    for (const Crawler &bug: bugs) {
-        if (bug.getId() == id) {
+    for (Bug *bug: bugs) {
+        if (bug->getId() == id) {
             bugFound = true;
-            bug.displayBug();
+            bug->displayBug();
             break;
         }
     }
@@ -84,7 +90,7 @@ void Board::findBugById(const int &id) const {
 }
 
 void Board::displayCells() {
-    vector<Crawler *> bugsInCell;
+    vector<Bug *> bugsInCell;
     int posY, posX;
     cout << "Cells:" << endl;
     for (int i = 0; i <= size_x; i++) {
@@ -94,8 +100,8 @@ void Board::displayCells() {
             cout << "(" << i << "," << j << ") ";
 
             if (cells.contains(index)) {
-                vector<Crawler *> bugs = cells.at(index);
-                for (const Crawler *bugPointer: bugs) {
+                vector<Bug *> bugs = cells.at(index);
+                for (Bug *bugPointer: bugs) {
                     if (bugPointer->isAlive()) {
                         cout << "| ";
                         cout << bugPointer->getId() << " ";
@@ -114,7 +120,7 @@ void Board::displayCells() {
 void Board::tap() {
     cells.clear();
 
-    for (Crawler *bug: bugs) {
+    for (Bug *bug: bugs) {
         if (bug->isAlive()) {
             bug->move();
             Position pos = bug->getPosition();
@@ -129,12 +135,12 @@ void Board::fight() {
     for (const auto &[cell, values]: this->cells) {
         if (values.size() <= 1) continue;
 
-        Crawler *pBigBug = nullptr;
-        vector<Crawler *> sameSizeBugs;
+        Bug *pBigBug = nullptr;
+        vector<Bug *> sameSizeBugs;
         int total_bugs_size = 0;
         int dead_bugs = -1;
 
-        for (Crawler *bugPointer: values) {
+        for (Bug *bugPointer: values) {
             if (pBigBug == nullptr || bugPointer->getSize() > pBigBug->getSize()) {
                 sameSizeBugs.clear();
                 pBigBug = bugPointer;
@@ -151,7 +157,7 @@ void Board::fight() {
             pBigBug = sameSizeBugs[rand() % sameSizeBugs.size()];
         }
 
-        for (Crawler *bugPointer: values) {
+        for (Bug *bugPointer: values) {
             if (bugPointer != pBigBug) {
                 bugPointer->setAlive(false);
                 bugPointer->setEatenBy(pBigBug->getId());
@@ -166,8 +172,8 @@ void Board::fight() {
 
 
 void Board::displayHistory() const {
-    for (const Crawler *bug: bugs) {
-        cout << bug->getId() << " " << Crawler::getBugType() << " Path: ";
+    for (Bug *bug: bugs) {
+        cout << bug->getId() << " " << bug->getBugType() << " Path: ";
 
         const list<Position> &history = bug->getPath();
 
@@ -206,8 +212,8 @@ void Board::writeHistoryToFile() const {
 
 
     ofstream file(filename);
-    for (const Crawler *bug: bugs) {
-        file << bug->getId() << " " << Crawler::getBugType() << " Path: ";
+    for (Bug *bug: bugs) {
+        file << bug->getId() << " " << bug->getBugType() << " Path: ";
         const list<Position> &history = bug->getPath();
         for (const Position &pos: history) {
             file << "(" << pos.x << "," << pos.y << ")";
@@ -221,4 +227,42 @@ void Board::writeHistoryToFile() const {
     }
     file.close();
     cout << "History saved to: " << filename << endl;
+}
+
+void Board::loadBugs() {
+    if (std::ifstream file("../crawler-bugs.txt"); file) {
+        std::string line;
+        while (std::getline(file, line)) {
+            std::string temp;
+            std::stringstream ss(line);
+            getline(ss, temp, ',');
+            const char bugType = temp[0];
+            getline(ss, temp, ',');
+            const int id = std::stoi(temp);
+            getline(ss, temp, ',');
+            int x = std::stoi(temp);
+            getline(ss, temp, ',');
+            int y = std::stoi(temp);
+            getline(ss, temp, ',');
+            int direction = std::stoi(temp);
+            getline(ss, temp, ',');
+            const int size = std::stoi(temp);
+
+            switch (bugType) {
+                case 'C':
+                    bugs.push_back(new Crawler(id, {x, y}, static_cast<Direction>(direction), size));
+                    break;
+                case 'H': {
+                    getline(ss, temp, ',');
+                    int hoopLength = std::stoi(temp);
+                    bugs.push_back(new Hopper(id, {x, y}, static_cast<Direction>(direction), size, hoopLength));
+                    break;
+                }
+            }
+        }
+
+        setBugs(bugs);
+    } else {
+        std::cout << "File not found" << std::endl;
+    }
 }

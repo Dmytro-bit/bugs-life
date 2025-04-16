@@ -7,6 +7,7 @@
 #include "Bug.h"
 #include <algorithm>
 
+using namespace std;
 
 class Hopper : public Bug {
 private:
@@ -14,8 +15,14 @@ private:
 
 public:
     Hopper();
+
     Hopper(int id, Position position, Direction direction, int size, int hopLength);
+
     void move() override;
+
+    string getBugType() override;
+
+    void displayBug() override;
 };
 
 

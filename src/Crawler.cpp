@@ -49,7 +49,7 @@ string Crawler::getBugType() {
     return "Crawler";
 }
 
-void Crawler::displayBug() const {
+void Crawler::displayBug() {
     ostringstream positionStream;
     positionStream << "(" << getPosition().x << "," << getPosition().y << ")";
     cout << left

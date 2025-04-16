@@ -19,9 +19,9 @@ public:
 
     void move() override;
 
-    static string getBugType();
+    string getBugType() override;
 
-    void displayBug() const;
+    void displayBug() override;
 };
 
 #endif //CRAWLER_H

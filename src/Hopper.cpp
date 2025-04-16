@@ -41,4 +41,25 @@ void Hopper::move() {
             this->setPosition({max(this->getPosition().x - hopLength, 0), this->getPosition().y});
             break;
     }
+
+    path.push_back(position);
+}
+
+
+string Hopper::getBugType() {
+    return "Hopper";
+}
+
+
+void Hopper::displayBug() {
+    ostringstream positionStream;
+    positionStream << "(" << getPosition().x << "," << getPosition().y << ")";
+    cout << left
+            << setw(5) << getId()
+            << setw(10) << getBugType()
+            << setw(15) << positionStream.str()
+            << setw(6) << getSize()
+            << setw(12) << directionToString()
+            << setw(8) << (isAlive() ? "Alive" : "Dead")
+            << setw(8) << getEatenBy() << endl;
 }

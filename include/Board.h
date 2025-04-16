@@ -12,22 +12,23 @@ using namespace std;
 
 class Board {
 private:
-    vector<Crawler *> bugs;
+    vector<Bug *> bugs;
     int deadBugs = 0;
-    std::unordered_map<int, vector<Crawler *> > cells;
+    std::unordered_map<int, vector<Bug *> > cells;
     static const int size_x = 10;
     static const int size_y = 10;
 
 public:
     Board();
+    ~Board();
 
-    Board(const unordered_map<int, vector<Crawler *> > &cells, const vector<Crawler *> &bugs);
+    Board(const unordered_map<int, vector<Bug *> > &cells, const vector<Bug *> &bugs);
 
     void fight();
 
-    [[nodiscard]] vector<Crawler> getBugs() const;
+    [[nodiscard]] vector<Bug> getBugs() const;
 
-    void setBugs(vector<Crawler *> bugs);
+    void setBugs(vector<Bug *> bugs);
 
     void displayBugs() const;
 
@@ -42,6 +43,8 @@ public:
     void runSimulation();
 
     void writeHistoryToFile() const;
+
+    void loadBugs();
 
     static int getBoardSizeX();
     static int getBoardSizeY();
