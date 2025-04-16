@@ -54,6 +54,18 @@ std::string Bug::directionToString() const {
     }
 }
 
+bool Bug::operator>(const Bug &bug) const {
+    return this->size > bug.size;
+}
+
+bool Bug::operator<(const Bug &bug) const {
+    return this->size < bug.size;
+}
+
+bool Bug::operator==(const Bug &bug) const {
+    return this->size == bug.size;
+}
+
 
 void Bug::setPosition(const Position position) {
     this->position = position;

@@ -61,6 +61,12 @@ public:
     [[nodiscard]] int getEatenBy() const { return eaten_by; }
 
     [[nodiscard]] std::string directionToString() const;
+
+    bool operator>(const Bug &bug) const;
+
+    bool operator<(const Bug &bug) const;
+
+    bool operator==(const Bug &bug) const;
 };
 
 
