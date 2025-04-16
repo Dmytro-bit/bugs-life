@@ -20,6 +20,18 @@ Board::Board(const unordered_map<int, vector<Crawler *> > &cells,
              const vector<Crawler *> &bugs): cells(cells), bugs(bugs) {
 }
 
+int Board::getBoardSizeX() {
+    return size_x;
+}
+
+int Board::getBoardSizeY() {
+    return size_y;
+}
+
+void Board::setBugs(vector<Crawler *> bugs) {
+    this->bugs = std::move(bugs);
+}
+
 
 vector<Crawler> Board::getBugs() const {
     vector<Crawler> bugsCopies;
@@ -84,7 +96,6 @@ void Board::displayCells() {
             if (cells.contains(index)) {
                 vector<Crawler *> bugs = cells.at(index);
                 for (const Crawler *bugPointer: bugs) {
-                    // int cellKey = pos.y * size_x + pos.x;
                     if (bugPointer->isAlive()) {
                         cout << "| ";
                         cout << bugPointer->getId() << " ";
@@ -151,11 +162,6 @@ void Board::fight() {
         pBigBug->setSize(total_bugs_size);
         cells[cell].push_back(pBigBug);
     }
-}
-
-
-void Board::setBugs(vector<Crawler *> bugs) {
-    this->bugs = std::move(bugs);
 }
 
 

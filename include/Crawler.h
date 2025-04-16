@@ -5,63 +5,21 @@
 #ifndef CRAWLER_H
 #define CRAWLER_H
 
-#include <list>
-#include <string>
 
 #include "Bug.h"
-#include "utils/Direction.h"
-#include "utils/Position.h"
+
 using namespace std;
 
 
-class Crawler: public Bug{
-private:
-    int id{};
-    Position position{};
-    Direction direction;
-    int size{};
-    bool alive = true;
-    std::list<Position> path;
-    int eaten_by = -1;
-
+class Crawler : public Bug {
 public:
     Crawler();
 
     Crawler(int id, Position position, Direction direction, int size);
 
-    void move();
-
-    bool isWayBlocked();
+    void move() override;
 
     static string getBugType();
-
-    [[nodiscard]] int getId() const;
-
-    [[nodiscard]] Position getPosition() const;
-
-    [[nodiscard]] std::list<Position> getPath() const;
-
-    [[nodiscard]] Direction getDirection() const;
-
-    [[nodiscard]] int getSize() const;
-
-    [[nodiscard]] bool isAlive() const;
-
-    void setId(int id);
-
-    void setPosition(Position position);
-
-    void setDirection(Direction direction);
-
-    void setSize(int size);
-
-    void setAlive(bool alive);
-
-    void setEatenBy(int id);
-
-    [[nodiscard]] int getEatenBy() const;
-
-    [[nodiscard]] string directionToString() const;
 
     void displayBug() const;
 };

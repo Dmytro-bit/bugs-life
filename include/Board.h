@@ -15,8 +15,8 @@ private:
     vector<Crawler *> bugs;
     int deadBugs = 0;
     std::unordered_map<int, vector<Crawler *> > cells;
-    const int size_x = 10;
-    const int size_y = 10;
+    static const int size_x = 10;
+    static const int size_y = 10;
 
 public:
     Board();
@@ -42,6 +42,9 @@ public:
     void runSimulation();
 
     void writeHistoryToFile() const;
+
+    static int getBoardSizeX();
+    static int getBoardSizeY();
 };
 
 
