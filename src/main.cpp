@@ -2,11 +2,13 @@
 #include "Crawler.h"
 #include <fstream>
 #include <sstream>
-
+#include <SFML/Graphics.hpp>
+#include <vector>
 #include "Board.h"
 #include "Hopper.h"
 
 using namespace std;
+using namespace sf;
 
 void findBug(const Board &board) {
     int id;
@@ -67,8 +69,20 @@ void menu(Board &board) {
 
 
 int main() {
-    srand(time(NULL));
-    Board board;
-    menu(board);
+
+    RenderWindow window(VideoMode(640, 480, 32), "Board");
+    // srand(time(NULL));
+    // Board board;
+    // menu(board);
+    while (window.isOpen()) {
+        Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == Event::Closed) {
+                window.close();
+            }
+            window.clear(Color::Cyan);
+            window.display();
+        }
+    }
     return 0;
 }
