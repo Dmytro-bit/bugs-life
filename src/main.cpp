@@ -67,22 +67,75 @@ void menu(Board &board) {
     } while (choice != '8');
 }
 
+void drawBoard(vector<RectangleShape> &squares) {
+    // view::BoardView board;
 
-int main() {
+    bool colorWite = true;
+    for (int i = 0; i <= 10; i++) {
+        for (int y = 0; y <= 10; y++) {
+            RectangleShape square(Vector2f(60, 60));
+            square.setFillColor(colorWite ? Color::White : Color::Black);
+            colorWite = !colorWite;
+            square.setPosition(static_cast<float>(i) * 60, static_cast<float>(y) * 60);
+            squares.push_back(square);
+        }
+    }
+    colorWite = !colorWite;
+}
 
-    RenderWindow window(VideoMode(640, 480, 32), "Board");
-    // srand(time(NULL));
-    // Board board;
-    // menu(board);
+void renderBug(Bug &bug, Texture &bugTexture, Sprite &sprite) {
+    sprite.setScale(0.27, 0.27);
+    string type = bug.getBugType();
+    switch (char type_c = type.at(0)) {
+        case 'C':
+            bugTexture.loadFromFile("assets/crawler.jpeg");
+            break;
+        case 'H':
+            bugTexture.loadFromFile("assets/hopper.jpeg");
+            break;
+        case 'S':
+            bugTexture.loadFromFile("assets/super_bug.jpeg");
+            break;
+        default:
+            cout << "Invalid bug type" << endl;
+    }
+    sprite.setTexture(bugTexture);
+    sprite.setPosition(Vector2f(0.0, 0.0));
+
+}
+
+void display_window() {
+    vector<RectangleShape> squares;
+    Crawler bug;
+    Sprite sprite;
+    Texture texture;
+    RenderWindow window(VideoMode(600, 600, 32), "Board");
+    window.setFramerateLimit(60);
+    drawBoard(squares);
+
+    renderBug(bug, texture, sprite);
+
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
             }
-            window.clear(Color::Cyan);
-            window.display();
         }
+        window.clear(Color::Black);
+        for (RectangleShape &square: squares) {
+            window.draw(square);
+        }
+        window.draw(sprite);
+        window.display();
     }
+}
+
+int main() {
+    RenderWindow window(VideoMode(640, 480, 32), "Board");
+    // srand(time(NULL));
+    // Board board;
+    // menu(board);
+    display_window();
     return 0;
 }
