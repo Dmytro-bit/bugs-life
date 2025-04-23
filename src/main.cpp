@@ -107,6 +107,8 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
 
 
 void display_window() {
+    srand(time(NULL));
+
     vector<RectangleShape> squares;
     Board board;
     board.loadBugs();
@@ -128,6 +130,13 @@ void display_window() {
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
                 window.close();
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
+                board.tap();
+                board.fight();
+                bugs = board.getBugs();
+                bugSprites.clear();
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
             }
         }
         window.clear(Color::Black);
