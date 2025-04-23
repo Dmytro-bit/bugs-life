@@ -40,14 +40,17 @@ void Board::setBugs(vector<Bug *> bugs) {
 }
 
 
-vector<Bug> Board::getBugs() const {
-    vector<Bug> bugsCopies;
-    // bugsCopies.reserve(bugs.size());
-    // for (const auto bug: bugs) {
-    //     bugsCopies.push_back(*bug);
-    // }
-    return bugsCopies;
+vector<const Bug*> Board::getBugs() const {
+    vector<const Bug*> result;
+    result.reserve(bugs.size());
+    for (auto const& bugPtr : bugs) {
+        if (bugPtr->isAlive())
+            result.push_back(bugPtr);
+
+    }
+    return result;
 }
+
 
 
 void Board::displayBugs() const {

@@ -29,7 +29,7 @@ public:
 
     virtual ~Bug() = default;
 
-    virtual std::string getBugType() =0;
+    virtual  std::string getBugType() const = 0;
 
     virtual void displayBug() =0;
 

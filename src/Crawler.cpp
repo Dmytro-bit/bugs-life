@@ -45,7 +45,7 @@ void Crawler::move() {
     path.push_back(position);
 }
 
-string Crawler::getBugType() {
+string Crawler::getBugType() const {
     return "Crawler";
 }
 

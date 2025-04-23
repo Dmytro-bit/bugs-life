@@ -71,49 +71,57 @@ void drawBoard(vector<RectangleShape> &squares) {
     // view::BoardView board;
 
     bool colorWite = true;
-    for (int i = 0; i <= 10; i++) {
-        for (int y = 0; y <= 10; y++) {
+    for (int i = 0; i < 10; i++) {
+        for (int y = 0; y < 10; y++) {
             RectangleShape square(Vector2f(60, 60));
-            square.setFillColor(colorWite ? Color::White : Color::Black);
+            square.setFillColor(colorWite ? Color::Green : Color::Magenta);
             colorWite = !colorWite;
             square.setPosition(static_cast<float>(i) * 60, static_cast<float>(y) * 60);
             squares.push_back(square);
         }
+        colorWite = !colorWite;
     }
-    colorWite = !colorWite;
-}
-
-void renderBug(Bug &bug, Texture &bugTexture, Sprite &sprite) {
-    sprite.setScale(0.27, 0.27);
-    string type = bug.getBugType();
-    switch (char type_c = type.at(0)) {
-        case 'C':
-            bugTexture.loadFromFile("assets/crawler.jpeg");
-            break;
-        case 'H':
-            bugTexture.loadFromFile("assets/hopper.jpeg");
-            break;
-        case 'S':
-            bugTexture.loadFromFile("assets/super_bug.jpeg");
-            break;
-        default:
-            cout << "Invalid bug type" << endl;
-    }
-    sprite.setTexture(bugTexture);
-    sprite.setPosition(Vector2f(0.0, 0.0));
 
 }
+
+void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const Texture &hopper_texture,
+               const Texture &super_texture,
+               vector<Sprite> &sprites) {
+    for (const Bug* &bug: bugs) {
+
+        Sprite sprite;
+        string type = bug->getBugType();
+        cout << "Bug type: " << type << endl;
+
+        if (type == "Crawler")  sprite.setTexture(crawler_texture);
+        if (type == "Hopper") sprite.setTexture(hopper_texture);
+        if (type == "Super") sprite.setTexture(super_texture);
+
+        sprite.setScale(0.27, 0.27);
+    sprite.setPosition(
+        Vector2f((float) bug->getPosition().x * 60, (float) bug->getPosition().y * 60));
+    sprites.push_back(sprite);
+    }
+
+}
+
 
 void display_window() {
     vector<RectangleShape> squares;
-    Crawler bug;
-    Sprite sprite;
-    Texture texture;
+    Board board;
+    board.loadBugs();
+    vector<const Bug *> bugs = board.getBugs();
+    string type = bugs.at(0)->getBugType();
+    vector<Sprite> bugSprites;
+    Texture crawlerTex, hopperTex, superTex;
+    crawlerTex.loadFromFile("assets/crawler.jpeg");
+    hopperTex.loadFromFile("assets/hopper.jpeg");
+    superTex.loadFromFile("assets/super_bug.jpeg");
     RenderWindow window(VideoMode(600, 600, 32), "Board");
     window.setFramerateLimit(60);
     drawBoard(squares);
 
-    renderBug(bug, texture, sprite);
+    renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
 
     while (window.isOpen()) {
         Event event;
@@ -126,16 +134,20 @@ void display_window() {
         for (RectangleShape &square: squares) {
             window.draw(square);
         }
-        window.draw(sprite);
+        for (Sprite &sprite: bugSprites) {
+            window.draw(sprite);
+        }
         window.display();
     }
 }
 
 int main() {
-    RenderWindow window(VideoMode(640, 480, 32), "Board");
-    // srand(time(NULL));
-    // Board board;
+    srand(time(NULL));
+    Board board;
     // menu(board);
-    display_window();
+     display_window();
+
+
+
     return 0;
 }

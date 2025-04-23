@@ -20,7 +20,7 @@ public:
 
     void move() override;
 
-    string getBugType() override;
+    string getBugType() const override;
 
     void displayBug() override;
 };

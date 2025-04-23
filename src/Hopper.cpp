@@ -46,7 +46,7 @@ void Hopper::move() {
 }
 
 
-string Hopper::getBugType() {
+string Hopper::getBugType() const {
     return "Hopper";
 }
 
