@@ -1,14 +1,19 @@
 #include <iostream>
-#include "Crawler.h"
+#include "model/Crawler.h"
 #include <fstream>
 #include <sstream>
 #include <SFML/Graphics.hpp>
 #include <vector>
-#include "Board.h"
-#include "Hopper.h"
+#include "model/Board.h"
+#include "model/Hopper.h"
 
 using namespace std;
 using namespace sf;
+
+void display_window();
+
+
+
 
 void findBug(const Board &board) {
     int id;
@@ -28,7 +33,9 @@ void menu(Board &board) {
         cout << "5. Display Life History of all Bugs (path taken)" << endl;
         cout << "6. Display all Cells listing their Bugs" << endl;
         cout << "7. Run simulation (generates a Tap every tenth of a second)" << endl;
-        cout << "8. Exit (write Life History of all Bugs to file)" << endl;
+        cout << "8. Run GUI" << endl << endl;
+        cout << "9. Exit (write Life History of all Bugs to file)" << endl;
+
         cout << "Enter your choice: ";
         cin >> choice;
         cout << endl;
@@ -57,14 +64,19 @@ void menu(Board &board) {
                 break;
             case '7':
                 board.runSimulation();
+                board.displayHistory();
+
+                break;
+            case '9':
+                board.writeHistoryToFile();
                 break;
             case '8':
-                board.writeHistoryToFile();
+                display_window();
                 break;
             default:
                 cout << "Invalid choice" << endl;
         }
-    } while (choice != '8');
+    } while (choice != '9');
 }
 
 void drawBoard(vector<RectangleShape> &squares) {
@@ -91,11 +103,9 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
 
         Sprite sprite;
         string type = bug->getBugType();
-        cout << "Bug type: " << type << endl;
-
         if (type == "Crawler")  sprite.setTexture(crawler_texture);
         if (type == "Hopper") sprite.setTexture(hopper_texture);
-        if (type == "Super") sprite.setTexture(super_texture);
+        if (type == "Bishop") sprite.setTexture(super_texture);
 
         sprite.setScale(0.27, 0.27);
     sprite.setPosition(
@@ -116,22 +126,24 @@ void display_window() {
     string type = bugs.at(0)->getBugType();
     vector<Sprite> bugSprites;
     Texture crawlerTex, hopperTex, superTex;
-    crawlerTex.loadFromFile("assets/crawler.jpeg");
-    hopperTex.loadFromFile("assets/hopper.jpeg");
-    superTex.loadFromFile("assets/super_bug.jpeg");
+    crawlerTex.loadFromFile("../assets/crawler.jpeg");
+    hopperTex.loadFromFile("../assets/hopper.jpeg");
+    superTex.loadFromFile("../assets/Bishop.jpeg");
     RenderWindow window(VideoMode(600, 600, 32), "Board");
     window.setFramerateLimit(60);
     drawBoard(squares);
     bool simulation = false;
     renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
     Clock clock;
-    const float interval = 1.0f;
+    const float interval = 0.1f;
     float time = 0.f;
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
             if (event.type == Event::Closed) {
+                board.displayHistory();
                 window.close();
+
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
                 board.tap();
@@ -174,8 +186,8 @@ void display_window() {
 int main() {
     srand(time(NULL));
     Board board;
-    // menu(board);
-     display_window();
+    menu(board);
+
 
 
 

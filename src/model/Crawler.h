@@ -6,7 +6,7 @@
 #define CRAWLER_H
 
 
-#include "Bug.h"
+#include "../src/model/Bug.h"
 
 using namespace std;
 

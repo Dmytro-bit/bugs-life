@@ -2,7 +2,7 @@
 // Created by dmytro on 15/04/25.
 //
 
-#include "../include/Bug.h"
+#include "Bug.h"
 
 #include <iomanip>
 
@@ -15,12 +15,12 @@ Direction Bug::getDirection() const { return direction; }
 bool Bug::isWayBlocked() const {
     switch (direction) {
         case North:
-            if (position.y + 1 <= Board::getBoardSizeY()) {
+            if (position.y + 1 <= Board::getBoardSizeY()-1) {
                 return false;
             }
             break;
         case East:
-            if (position.x + 1 <= Board::getBoardSizeX()) {
+            if (position.x + 1 <= Board::getBoardSizeX()-1) {
                 return false;
             }
             break;

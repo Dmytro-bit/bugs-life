@@ -4,8 +4,8 @@
 
 #ifndef BUG_H
 #define BUG_H
-#include "utils/Direction.h"
-#include "utils/Position.h"
+#include "../../include/utils/Direction.h"
+#include "../../include/utils/Position.h"
 #include <list>
 #include <string>
 #include <iomanip>

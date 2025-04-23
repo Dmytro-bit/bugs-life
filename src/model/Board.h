@@ -15,8 +15,8 @@ private:
     vector<Bug *> bugs;
     int deadBugs = 0;
     std::unordered_map<int, vector<Bug *> > cells;
-    static const int size_x = 10;
-    static const int size_y = 10;
+    static constexpr int size_x = 10;
+    static constexpr int size_y = 10;
 
 public:
     Board();

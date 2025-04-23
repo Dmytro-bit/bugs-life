@@ -18,6 +18,8 @@ file(GLOB_RECURSE HEADERS CONFIGURE_DEPENDS include/*.h)
 add_executable(bug_life
         ${SOURCES}
         ${HEADERS}
+        src/model/Bishop.cpp
+        src/model/Bishop.h
 )
 
 # includes

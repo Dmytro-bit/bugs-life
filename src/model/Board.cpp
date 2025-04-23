@@ -11,6 +11,7 @@
 
 #include "Crawler.h"
 #include "Hopper.h"
+#include "Bishop.h"
 //
 // Created by vladikslon on 3/30/25.
 //
@@ -40,17 +41,15 @@ void Board::setBugs(vector<Bug *> bugs) {
 }
 
 
-vector<const Bug*> Board::getBugs() const {
-    vector<const Bug*> result;
+vector<const Bug *> Board::getBugs() const {
+    vector<const Bug *> result;
     result.reserve(bugs.size());
-    for (auto const& bugPtr : bugs) {
+    for (auto const &bugPtr: bugs) {
         if (bugPtr->isAlive())
             result.push_back(bugPtr);
-
     }
     return result;
 }
-
 
 
 void Board::displayBugs() const {
@@ -96,8 +95,8 @@ void Board::displayCells() {
     vector<Bug *> bugsInCell;
     int posY, posX;
     cout << "Cells:" << endl;
-    for (int i = 0; i <= size_x; i++) {
-        for (int j = 0; j <= size_y; j++) {
+    for (int i = 0; i < size_x; i++) {
+        for (int j = 0; j < size_y; j++) {
             int index = j * size_x + i;
 
             cout << "(" << i << "," << j << ") ";
@@ -261,6 +260,9 @@ void Board::loadBugs() {
                     bugs.push_back(new Hopper(id, {x, y}, static_cast<Direction>(direction), size, hoopLength));
                     break;
                 }
+                case 'B':
+                    bugs.push_back(new Bishop(id, {x, y}, static_cast<Direction>(direction), size));
+                    break;
             }
         }
 
