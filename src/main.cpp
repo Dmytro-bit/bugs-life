@@ -122,9 +122,11 @@ void display_window() {
     RenderWindow window(VideoMode(600, 600, 32), "Board");
     window.setFramerateLimit(60);
     drawBoard(squares);
-
+    bool simulation = false;
     renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
-
+    Clock clock;
+    const float interval = 1.0f;
+    float time = 0.f;
     while (window.isOpen()) {
         Event event;
         while (window.pollEvent(event)) {
@@ -137,6 +139,25 @@ void display_window() {
                 bugs = board.getBugs();
                 bugSprites.clear();
                 renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
+            }
+            if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
+                simulation = !simulation;
+            }
+
+
+        }
+        float delta = clock.restart().asSeconds();
+        time += delta;
+        while (time >= interval && simulation) {
+            time -= interval;
+
+            if (!board.getBugs().empty()) {
+                board.tap();
+                board.fight();
+                bugs = board.getBugs();
+                bugSprites.clear();
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
+
             }
         }
         window.clear(Color::Black);
