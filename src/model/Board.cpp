@@ -12,6 +12,7 @@
 #include "Crawler.h"
 #include "Hopper.h"
 #include "Bishop.h"
+#include "Superbug.h"
 //
 // Created by vladikslon on 3/30/25.
 //
@@ -263,6 +264,9 @@ void Board::loadBugs() {
                 case 'B':
                     bugs.push_back(new Bishop(id, {x, y}, static_cast<Direction>(direction), size));
                     break;
+                case 'S':
+                    bugs.push_back(new Superbug(id, {x, y}, static_cast<Direction>(direction), size));
+                    break;
             }
         }
 
@@ -271,3 +275,18 @@ void Board::loadBugs() {
         std::cout << "File not found" << std::endl;
     }
 }
+
+
+void Board::moveSuper(Direction dir) {
+    for (auto& bugPtr : bugs) {
+        if (bugPtr->getBugType() == "Super") {
+            auto* sb = dynamic_cast<Superbug*>(bugPtr);
+            if (sb) {
+                sb->manualMove(dir);
+
+            }
+            break;
+        }
+    }
+}
+

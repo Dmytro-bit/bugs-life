@@ -20,6 +20,8 @@ add_executable(bug_life
         ${HEADERS}
         src/model/Bishop.cpp
         src/model/Bishop.h
+        src/model/Superbug.cpp
+        src/model/Superbug.h
 )
 
 # includes

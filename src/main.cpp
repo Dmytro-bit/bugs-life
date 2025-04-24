@@ -6,13 +6,12 @@
 #include <vector>
 #include "model/Board.h"
 #include "model/Hopper.h"
+#include "model/Superbug.h"
 
 using namespace std;
 using namespace sf;
 
 void display_window();
-
-
 
 
 void findBug(const Board &board) {
@@ -80,8 +79,6 @@ void menu(Board &board) {
 }
 
 void drawBoard(vector<RectangleShape> &squares) {
-    // view::BoardView board;
-
     bool colorWite = true;
     for (int i = 0; i < 10; i++) {
         for (int y = 0; y < 10; y++) {
@@ -93,47 +90,85 @@ void drawBoard(vector<RectangleShape> &squares) {
         }
         colorWite = !colorWite;
     }
-
 }
 
 void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const Texture &hopper_texture,
-               const Texture &super_texture,
+               const Texture &super_texture, const Texture &bishop_texture,
                vector<Sprite> &sprites) {
-    for (const Bug* &bug: bugs) {
-
+    const float cellSize = 60.f;
+    sprites.clear();
+    for (const Bug *bug: bugs) {
         Sprite sprite;
-        string type = bug->getBugType();
-        if (type == "Crawler")  sprite.setTexture(crawler_texture);
-        if (type == "Hopper") sprite.setTexture(hopper_texture);
-        if (type == "Bishop") sprite.setTexture(super_texture);
-
-        sprite.setScale(0.27, 0.27);
-    sprite.setPosition(
-        Vector2f((float) bug->getPosition().x * 60, (float) bug->getPosition().y * 60));
-    sprites.push_back(sprite);
+        const string type = bug->getBugType();
+        if (type == "Crawler") sprite.setTexture(crawler_texture);
+        else if (type == "Hopper") sprite.setTexture(hopper_texture);
+        else if (type == "Bishop") sprite.setTexture(bishop_texture);
+        else if (type == "Super") sprite.setTexture(super_texture);
+        auto bounds = sprite.getGlobalBounds();
+        float scale_x, scale_y;
+        scale_x = cellSize/bounds.width;
+        scale_y = cellSize/bounds.height;
+        sprite.setScale(scale_x, scale_y);
+        sprite.setPosition(
+            bug->getPosition().x * 60.f,
+            bug->getPosition().y * 60.f
+        );
+        sprites.push_back(sprite);
     }
-
 }
 
 
+void processEvent(const Event &ev, Board &board, vector<const Bug *> &bugs, const Texture &crawlerTex,
+                  const Texture &hopperTex, const Texture &bishopTex,
+                  const Texture &superTex, vector<Sprite> &sprites) {
+    if (ev.type == Event::KeyPressed) {
+        switch (ev.key.code) {
+            case Keyboard::Up:
+                board.moveSuper(North);
+                board.fight();
+
+                break;
+            case Keyboard::Down:
+                board.moveSuper(South);
+                board.fight();
+
+                break;
+            case Keyboard::Left:
+                board.moveSuper(West);
+                board.fight();
+
+                break;
+            case Keyboard::Right:
+                board.moveSuper(East);
+                board.fight();
+
+                break;
+            default:
+                break;
+        }
+        bugs = board.getBugs();
+        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites);
+    }
+}
+
 void display_window() {
     srand(time(NULL));
-
     vector<RectangleShape> squares;
     Board board;
     board.loadBugs();
     vector<const Bug *> bugs = board.getBugs();
     string type = bugs.at(0)->getBugType();
     vector<Sprite> bugSprites;
-    Texture crawlerTex, hopperTex, superTex;
+    Texture crawlerTex, hopperTex, superTex, bishop_texture;
     crawlerTex.loadFromFile("../assets/crawler.jpeg");
     hopperTex.loadFromFile("../assets/hopper.jpeg");
-    superTex.loadFromFile("../assets/Bishop.jpeg");
+    superTex.loadFromFile("../assets/super_bug.jpg");
+    bishop_texture.loadFromFile("../assets/Bishop.jpeg");
     RenderWindow window(VideoMode(600, 600, 32), "Board");
     window.setFramerateLimit(60);
     drawBoard(squares);
     bool simulation = false;
-    renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
+    renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
     Clock clock;
     const float interval = 0.1f;
     float time = 0.f;
@@ -143,20 +178,23 @@ void display_window() {
             if (event.type == Event::Closed) {
                 board.displayHistory();
                 window.close();
-
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Space) {
                 board.tap();
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 simulation = !simulation;
             }
+            if (event.type == Event::KeyPressed && (event.key.code == Keyboard::Down||event.key.code == Keyboard::Up||event.key.code == Keyboard::Left||event.key.code == Keyboard::Right)) {
+                board.tap();
+                board.fight();
 
-
+            }
+            processEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites);
         }
         float delta = clock.restart().asSeconds();
         time += delta;
@@ -168,8 +206,7 @@ void display_window() {
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bugSprites);
-
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
             }
         }
         window.clear(Color::Black);
@@ -187,8 +224,6 @@ int main() {
     srand(time(NULL));
     Board board;
     menu(board);
-
-
 
 
     return 0;

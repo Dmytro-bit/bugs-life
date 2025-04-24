@@ -46,6 +46,8 @@ public:
 
     void loadBugs();
 
+    void moveSuper(Direction dir);
+
     static int getBoardSizeX();
     static int getBoardSizeY();
 };
