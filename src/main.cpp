@@ -22,6 +22,7 @@ void findBug(const Board &board) {
 }
 
 void menu(Board &board) {
+
     // char choice;
     // do {
         cout << endl;
@@ -55,9 +56,12 @@ void drawBoard(vector<RectangleShape> &squares) {
 
 void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const Texture &hopper_texture,
                const Texture &super_texture, const Texture &bishop_texture,
-               vector<Sprite> &sprites) {
+               vector<Sprite> &sprites, Font &font, vector<Text> &labels) {
+    font.loadFromFile("../assets/Trebuchet_MS.ttf");
+
     const float cellSize = 60.f;
     sprites.clear();
+    labels.clear();
     for (const Bug *bug: bugs) {
         Sprite sprite;
         const string type = bug->getBugType();
@@ -75,13 +79,28 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
             bug->getPosition().y * 60.f
         );
         sprites.push_back(sprite);
+
+        Text label;
+        int id = bug->getId();
+        String idString = to_string(id);
+        label.setString(idString);
+        label.setFont(font);
+        label.setCharacterSize(18);
+        label.setFillColor(Color::Black);
+        label.setPosition(
+            bug->getPosition().x * cellSize,
+            bug->getPosition().y * cellSize);
+        labels.push_back(label);
+
+
+
     }
 }
 
 
 void processSuperbugEvent(const Event &ev, Board &board, vector<const Bug *> &bugs, const Texture &crawlerTex,
                           const Texture &hopperTex, const Texture &bishopTex,
-                          const Texture &superTex, vector<Sprite> &sprites) {
+                          const Texture &superTex, vector<Sprite> &sprites, Font &font, vector<Text> &labels) {
     if (ev.type == Event::KeyPressed) {
         switch (ev.key.code) {
             case Keyboard::Up:
@@ -108,13 +127,15 @@ void processSuperbugEvent(const Event &ev, Board &board, vector<const Bug *> &bu
                 break;
         }
         bugs = board.getBugs();
-        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites);
+        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites,font, labels);
     }
 }
 
 
 void display_window() {
-    srand(time(NULL));
+    Font font;
+    font.loadFromFile("../assets/Trebuchet_MS.ttf");
+    vector<Text> labels;
     vector<RectangleShape> squares;
     Board board;
     board.loadBugs();
@@ -130,7 +151,7 @@ void display_window() {
     window.setFramerateLimit(60);
     drawBoard(squares);
     bool simulation = false;
-    renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
+    renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites, font, labels);
     Clock clock;
     const float interval = 0.1f;
     float time = 0.f;
@@ -146,7 +167,7 @@ void display_window() {
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites,font,labels);
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 simulation = !simulation;
@@ -174,7 +195,7 @@ void display_window() {
                 board.writeHistoryToFile();
                 window.close();
             }
-            processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites);
+            processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites,font, labels);
         }
         float delta = clock.restart().asSeconds();
         time += delta;
@@ -186,7 +207,7 @@ void display_window() {
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites);
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites,font,labels);
             }
         }
         window.clear(Color::Black);
@@ -196,12 +217,16 @@ void display_window() {
         for (Sprite &sprite: bugSprites) {
             window.draw(sprite);
         }
+        for (Text &text: labels) {
+            window.draw(text);
+        }
         window.display();
     }
 }
 
 int main() {
-    srand(time(NULL));
+    srand(time(nullptr));
+
     Board board;
     menu(board);
 
