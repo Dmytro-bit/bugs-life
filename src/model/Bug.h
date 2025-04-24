@@ -36,7 +36,8 @@ public:
     [[nodiscard]] Direction getDirection() const;
 
 
-    [[nodiscard]] int getId() const { return id; }
+    [[nodiscard]]
+    int getId() const { return id; }
 
     [[nodiscard]] Position getPosition() const { return position; }
 
