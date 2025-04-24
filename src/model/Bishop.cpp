@@ -5,8 +5,7 @@
 #include "Bishop.h"
 
 #include "Board.h"
-using  namespace std;
-
+using namespace std;
 
 
 Bishop::Bishop(const int id, const Position position, const Direction direction, const int size) {
@@ -14,36 +13,40 @@ Bishop::Bishop(const int id, const Position position, const Direction direction,
     this->position = position;
     this->direction = direction;
     this->size = size;
-
 }
 
 void Bishop::move() {
     if (!alive)
         return;
-    int  newDir;
-    while (this->isWayBlocked()) {
-        newDir = (rand() % 4) + 1;
-        direction = static_cast<Direction>(newDir);
-    }
+    int newDir;
+    newDir = (rand() % 4) + 1;
+    direction = static_cast<Direction>(newDir);
 
     switch (this->getDirection()) {
         case North:
-            this->setPosition({this->getPosition().x + 1, min(this->getPosition().y + 1, Board::getBoardSizeY())});
-            newDir = (rand() % 4) + 1;
-            direction = static_cast<Direction>(newDir);
+            this->setPosition({
+                min(this->getPosition().x + 1, Board::getBoardSizeX()),
+                min(this->getPosition().y + 1, Board::getBoardSizeY())
+            });
             break;
         case East:
-            this->setPosition({min(this->getPosition().x + 1, Board::getBoardSizeX()), this->getPosition().y - 1 });
-            newDir = (rand() % 4) + 1;
-            direction = static_cast<Direction>(newDir);
+            this->setPosition({
+                min(this->getPosition().x + 1, Board::getBoardSizeX()),
+                max(this->getPosition().y - 1, 0)
+            });
             break;
         case South:
-            this->setPosition({this->getPosition().x - 1, max(this->getPosition().y - 1, 0)});
-            newDir = (rand() % 4) + 1;
-            direction = static_cast<Direction>(newDir);
+            this->setPosition({
+                max(this->getPosition().x - 1, 0),
+                max(this->getPosition().y - 1, 0)
+            });
+
             break;
         case West:
-            this->setPosition({max(this->getPosition().x - 1, 0), this->getPosition().y + 1});
+            this->setPosition({
+                max(this->getPosition().x - 1, 0),
+                min(this->getPosition().y + 1, Board::getBoardSizeY())
+            });
             break;
     }
 
