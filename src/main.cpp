@@ -22,19 +22,125 @@ void findBug(const Board &board) {
 }
 
 void menu(Board &board) {
-    // char choice;
-    // do {
-    cout << endl;
-    cout << "1. Display all Bugs" << endl;
-    cout << "2. Display Life History of all Bugs (path taken)" << endl;
-    cout << "3. Display all Cells listing their Bugs" << endl;
-    cout << "4. Find a Bug (given an id)" << endl;
-    cout << "Space. Tap the Bug Board (cause all to move, then fight/eat)" << endl;
-    cout << "Enter. Run simulation (generates a Tap every tenth of a second)" << endl;
-    cout << "Up/Down/Left/Right - move your superbug manually ";
-    cout << "Escape. Exit (write Life History of all Bugs to file)" << endl;
+    char choice;
 
-    display_window();
+    do {
+
+        cout << endl;
+
+        cout << "1. Initialize Bug Board (load data from file)" << endl;
+
+        cout << "2. Display all Bugs" << endl;
+
+        cout << "3. Find a Bug (given an id)" << endl;
+
+        cout << "4. Tap the Bug Board (cause all to move, then fight/eat)" << endl;
+
+        cout << "5. Display Life History of all Bugs (path taken)" << endl;
+
+        cout << "6. Display all Cells listing their Bugs" << endl;
+
+        cout << "7. Run simulation (generates a Tap every tenth of a second)" << endl;
+
+        cout << "8. Run GUI" << endl << endl;
+
+        cout << "9. Exit (write Life History of all Bugs to file)" << endl;
+
+
+
+        cout << "Enter your choice: ";
+
+        cin >> choice;
+
+        cout << endl;
+
+
+
+        switch (choice) {
+
+            case '1': {
+
+                std::vector<Bug *> bugs;
+
+                board.loadBugs();
+
+                break;
+
+            }
+
+            case '2':
+
+                board.displayBugs();
+
+                break;
+
+            case '3':
+
+                findBug(board);
+
+                break;
+
+            case '4':
+
+                board.tap();
+
+                board.fight();
+
+                break;
+
+            case '5':
+
+                board.displayHistory();
+
+                break;
+
+            case '6':
+
+                board.displayCells();
+
+                break;
+
+            case '7':
+
+                board.runSimulation();
+
+                board.displayHistory();
+
+
+
+                break;
+
+            case '9':
+
+                board.writeHistoryToFile();
+
+                break;
+
+            case '8':
+
+                cout << endl;
+                cout << "1. Display all Bugs" << endl;
+                cout << "2. Display Life History of all Bugs (path taken)" << endl;
+                cout << "3. Display all Cells listing their Bugs" << endl;
+                cout << "4. Find a Bug (given an id)" << endl;
+                cout << "Space. Tap the Bug Board (cause all to move, then fight/eat)" << endl;
+                cout << "Enter. Run simulation (generates a Tap every tenth of a second)" << endl;
+                cout << "Up/Down/Left/Right - move your superbug manually ";
+                cout << "Escape. Exit (write Life History of all Bugs to file)" << endl;
+
+                display_window();
+
+                break;
+
+            default:
+
+                cout << "Invalid choice" << endl;
+
+        }
+
+    } while (choice != '9');
+
+
 }
 
 void drawBoard(vector<RectangleShape> &squares) {
