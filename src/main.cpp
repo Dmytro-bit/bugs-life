@@ -22,22 +22,19 @@ void findBug(const Board &board) {
 }
 
 void menu(Board &board) {
-
     // char choice;
     // do {
-        cout << endl;
-        cout << "1. Display all Bugs" << endl;
-        cout << "2. Display Life History of all Bugs (path taken)" << endl;
-        cout << "3. Display all Cells listing their Bugs" << endl;
-        cout << "4. Find a Bug (given an id)" << endl;
-        cout << "Space. Tap the Bug Board (cause all to move, then fight/eat)" << endl;
-        cout << "Enter. Run simulation (generates a Tap every tenth of a second)" << endl;
-        cout << "Up/Down/Left/Right - move your superbug manually ";
-        cout << "Escape. Exit (write Life History of all Bugs to file)" << endl;
+    cout << endl;
+    cout << "1. Display all Bugs" << endl;
+    cout << "2. Display Life History of all Bugs (path taken)" << endl;
+    cout << "3. Display all Cells listing their Bugs" << endl;
+    cout << "4. Find a Bug (given an id)" << endl;
+    cout << "Space. Tap the Bug Board (cause all to move, then fight/eat)" << endl;
+    cout << "Enter. Run simulation (generates a Tap every tenth of a second)" << endl;
+    cout << "Up/Down/Left/Right - move your superbug manually ";
+    cout << "Escape. Exit (write Life History of all Bugs to file)" << endl;
 
-        display_window();
-
-
+    display_window();
 }
 
 void drawBoard(vector<RectangleShape> &squares) {
@@ -86,14 +83,14 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
         label.setString(idString);
         label.setFont(font);
         label.setCharacterSize(18);
-        label.setFillColor(Color::Black);
+        label.setFillColor(Color::Red);
+
         label.setPosition(
             bug->getPosition().x * cellSize,
-            bug->getPosition().y * cellSize);
+            bug->getPosition().y * cellSize
+        );
+
         labels.push_back(label);
-
-
-
     }
 }
 
@@ -127,7 +124,7 @@ void processSuperbugEvent(const Event &ev, Board &board, vector<const Bug *> &bu
                 break;
         }
         bugs = board.getBugs();
-        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites,font, labels);
+        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites, font, labels);
     }
 }
 
@@ -167,7 +164,7 @@ void display_window() {
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites,font,labels);
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites, font, labels);
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 simulation = !simulation;
@@ -195,7 +192,8 @@ void display_window() {
                 board.writeHistoryToFile();
                 window.close();
             }
-            processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites,font, labels);
+            processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites, font,
+                                 labels);
         }
         float delta = clock.restart().asSeconds();
         time += delta;
@@ -207,7 +205,7 @@ void display_window() {
                 board.fight();
                 bugs = board.getBugs();
                 bugSprites.clear();
-                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites,font,labels);
+                renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites, font, labels);
             }
         }
         window.clear(Color::Black);
