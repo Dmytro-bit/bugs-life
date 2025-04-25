@@ -25,7 +25,6 @@ void menu(Board &board) {
     char choice;
 
     do {
-
         cout << endl;
 
         cout << "1. Initialize Bug Board (load data from file)" << endl;
@@ -47,7 +46,6 @@ void menu(Board &board) {
         cout << "9. Exit (write Life History of all Bugs to file)" << endl;
 
 
-
         cout << "Enter your choice: ";
 
         cin >> choice;
@@ -55,17 +53,13 @@ void menu(Board &board) {
         cout << endl;
 
 
-
         switch (choice) {
-
             case '1': {
-
                 std::vector<Bug *> bugs;
 
                 board.loadBugs();
 
                 break;
-
             }
 
             case '2':
@@ -75,22 +69,35 @@ void menu(Board &board) {
                 break;
 
             case '3':
+                if (!board.getBugs().empty()) {
+                    findBug(board);
+                } else {
+                    cout << "You have no bugs found. Please load bugs" << endl;
+                }
 
-                findBug(board);
+
 
                 break;
 
             case '4':
+                if (!board.getBugs().empty()) {
+                    board.tap();
 
-                board.tap();
+                    board.fight();
+                } else {
+                    cout << "You have no bugs found. Please load bugs" << endl;
+                }
 
-                board.fight();
 
                 break;
 
             case '5':
+                if (!board.getBugs().empty()) {
+                    board.displayHistory();
+                } else {
+                    cout << "You have no bugs found. Please load bugs" << endl;
+                }
 
-                board.displayHistory();
 
                 break;
 
@@ -102,10 +109,13 @@ void menu(Board &board) {
 
             case '7':
 
-                board.runSimulation();
+                if (!board.getBugs().empty()) {
+                    board.runSimulation();
 
-                board.displayHistory();
-
+                    board.displayHistory();
+                } else {
+                    cout << "You have no bugs found." << endl;
+                }
 
 
                 break;
@@ -135,12 +145,8 @@ void menu(Board &board) {
             default:
 
                 cout << "Invalid choice" << endl;
-
         }
-
     } while (choice != '9');
-
-
 }
 
 void drawBoard(vector<RectangleShape> &squares) {
