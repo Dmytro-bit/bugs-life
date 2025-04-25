@@ -18,10 +18,15 @@ Bishop::Bishop(const int id, const Position position, const Direction direction,
 void Bishop::move() {
     if (!alive)
         return;
-    int newDir;
-    newDir = (rand() % 4) + 1;
+    int  newDir;
+    for (int i = 0; i <= 4; i++) {
+        newDir = (rand() % 4) + 1;
     direction = static_cast<Direction>(newDir);
+    }
 
+    if (this->isWayBlocked()) {
+        return;
+    }
     switch (this->getDirection()) {
         case North:
             this->setPosition({
