@@ -23,11 +23,15 @@ void Crawler::move() {
     if (!alive)
         return;
 
-    while (this->isWayBlocked()) {
-        int newDir = (rand() % 4) + 1;
-        direction = static_cast<Direction>(newDir);
+    if (this->isWayBlocked()) {
+        for (int i = 0; i < this->size; i++) {
+            int newDir = (rand() % 4) + 1;
+            direction = static_cast<Direction>(newDir);
+        }
     }
-
+    if (this->isWayBlocked()) {
+        return;
+    }
     switch (this->getDirection()) {
         case North:
             this->setPosition({this->getPosition().x, this->getPosition().y + 1});
@@ -42,7 +46,12 @@ void Crawler::move() {
             this->setPosition({this->getPosition().x - 1, this->getPosition().y});
             break;
     }
+
     path.push_back(position);
+    // while (this->isWayBlocked()) {
+    //     int newDir = (rand() % 4) + 1;
+    //     direction = static_cast<Direction>(newDir);
+    // }
 }
 
 string Crawler::getBugType() const {

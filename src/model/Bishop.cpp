@@ -21,11 +21,18 @@ void Bishop::move() {
     if (!alive)
         return;
     int  newDir;
-    while (this->isWayBlocked()) {
-        newDir = (rand() % 4) + 1;
+
+    if (this->isWayBlocked()) {
+        for (int i = 0; i <= 4; i++) {
+            newDir = (rand() % 4) + 1;
         direction = static_cast<Direction>(newDir);
+        }
+
     }
 
+    if (this->isWayBlocked()) {
+        return;
+    }
     switch (this->getDirection()) {
         case North:
             this->setPosition({this->getPosition().x + 1, min(this->getPosition().y + 1, Board::getBoardSizeY())});

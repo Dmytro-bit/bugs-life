@@ -22,10 +22,20 @@ void Hopper::move() {
     if (!alive)
         return;
 
-    while (this->isWayBlocked()) {
-        int newDir = (rand() % 4) + 1;
-        direction = static_cast<Direction>(newDir);
-    }
+        if (this->isWayBlocked()) {
+            for (int i = 0; i < size; i++) {
+            int newDir = (rand() % 4) + 1;
+            direction = static_cast<Direction>(newDir);
+            }
+        }
+
+        if (this->isWayBlocked()) {
+            return;
+        }
+    // while (this->isWayBlocked()) {
+    //     int newDir = (rand() % 4) + 1;
+    //     direction = static_cast<Direction>(newDir);
+    // }
 
     switch (this->getDirection()) {
         case North:
