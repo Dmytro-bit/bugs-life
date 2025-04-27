@@ -32,10 +32,7 @@ void Hopper::move() {
         if (this->isWayBlocked()) {
             return;
         }
-    // while (this->isWayBlocked()) {
-    //     int newDir = (rand() % 4) + 1;
-    //     direction = static_cast<Direction>(newDir);
-    // }
+
 
     switch (this->getDirection()) {
         case North:
