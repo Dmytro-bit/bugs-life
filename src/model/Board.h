@@ -4,6 +4,7 @@
 
 #ifndef BOARD_H
 #define BOARD_H
+#include <optional>
 #include <vector>
 #include <unordered_map>
 
@@ -25,6 +26,7 @@ public:
     Board(const unordered_map<int, vector<Bug *> > &cells, const vector<Bug *> &bugs);
 
     void fight();
+    optional<Direction> penSuperDirection;
 
     [[nodiscard]] vector<Bug*> getBugs() const;
 

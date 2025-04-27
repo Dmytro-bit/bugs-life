@@ -174,6 +174,8 @@ void Board::fight() {
 }
 
 
+
+
 void Board::displayHistory() const {
     for (Bug *bug: bugs) {
         cout << bug->getId() << " " << bug->getBugType() << " Path: ";
