@@ -15,12 +15,12 @@ Direction Bug::getDirection() const { return direction; }
 bool Bug::isWayBlocked() const {
     switch (direction) {
         case North:
-            if (position.y + 1 <= Board::getBoardSizeY()-1) {
+            if (position.y + 1 <= Board::getBoardSizeY()) {
                 return false;
             }
             break;
         case East:
-            if (position.x + 1 <= Board::getBoardSizeX()-1) {
+            if (position.x + 1 <= Board::getBoardSizeX()) {
                 return false;
             }
             break;

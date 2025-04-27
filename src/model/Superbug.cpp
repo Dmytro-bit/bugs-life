@@ -7,6 +7,7 @@
 #include "Board.h"
 
 using namespace std;
+
 Superbug::Superbug(int id, Position position, Direction direction, int size) {
     this->id = id;
     this->position = position;
@@ -17,25 +18,26 @@ Superbug::Superbug(int id, Position position, Direction direction, int size) {
 
 void Superbug::manualMove(Direction d) {
     setDirection(d);
-
-    int max = Board::getBoardSizeX() - 1;
     int x = getPosition().x;
     int y = getPosition().y;
     switch (d) {
-        case North: if (y>0)      --y; break;
-        case South: if (y<max)    ++y; break;
-        case East:  if (x<max)    ++x; break;
-        case West:  if (x>0)      --x; break;
+        case North: if (y > 0) --y;
+            break;
+        case South: if (y < Board::getBoardSizeY()) ++y;
+            break;
+        case East: if (x < Board::getBoardSizeX()) ++x;
+            break;
+        case West: if (x > 0) --x;
+            break;
     }
-    setPosition({x,y});
+    setPosition({x, y});
     path.push_back(position);
 }
 
 void Superbug::move() {
-
 }
 
-std::string Superbug::getBugType() const  {
+std::string Superbug::getBugType() const {
     return "Super";
 }
 
