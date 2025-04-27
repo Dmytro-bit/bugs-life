@@ -42,8 +42,8 @@ void Board::setBugs(vector<Bug *> bugs) {
 }
 
 
-vector<const Bug *> Board::getBugs() const {
-    vector<const Bug *> result;
+vector<Bug *> Board::getBugs() const {
+    vector<Bug *> result;
     result.reserve(bugs.size());
     for (auto const &bugPtr: bugs) {
         if (bugPtr->isAlive())
@@ -269,7 +269,6 @@ void Board::loadBugs() {
                     break;
             }
         }
-
         setBugs(bugs);
     } else {
         std::cout << "File not found" << std::endl;
@@ -283,7 +282,6 @@ void Board::moveSuper(Direction dir) {
             auto* sb = dynamic_cast<Superbug*>(bugPtr);
             if (sb) {
                 sb->manualMove(dir);
-
             }
             break;
         }

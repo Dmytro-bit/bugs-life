@@ -24,7 +24,7 @@ void Crawler::move() {
         return;
 
     if (this->isWayBlocked()) {
-        for (int i = 0; i < this->size; i++) {
+        for (int i = 0; i < 4; i++) {
             int newDir = (rand() % 4) + 1;
             direction = static_cast<Direction>(newDir);
         }

@@ -26,7 +26,7 @@ public:
 
     void fight();
 
-    [[nodiscard]] vector<const Bug*> getBugs() const;
+    [[nodiscard]] vector<Bug*> getBugs() const;
 
     void setBugs(vector<Bug *> bugs);
 

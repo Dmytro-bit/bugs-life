@@ -76,7 +76,6 @@ void menu(Board &board) {
                 }
 
 
-
                 break;
 
             case '4':
@@ -163,7 +162,7 @@ void drawBoard(vector<RectangleShape> &squares) {
     }
 }
 
-void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const Texture &hopper_texture,
+void renderBug(vector<Bug *> &bugs, const Texture &crawler_texture, const Texture &hopper_texture,
                const Texture &super_texture, const Texture &bishop_texture,
                vector<Sprite> &sprites, Font &font, vector<Text> &labels) {
     font.loadFromFile("../assets/Trebuchet_MS.ttf");
@@ -171,7 +170,7 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
     const float cellSize = 60.f;
     sprites.clear();
     labels.clear();
-    for (const Bug *bug: bugs) {
+    for (Bug *bug: bugs) {
         Sprite sprite;
         const string type = bug->getBugType();
         if (type == "Crawler") sprite.setTexture(crawler_texture);
@@ -207,36 +206,31 @@ void renderBug(vector<const Bug *> &bugs, const Texture &crawler_texture, const 
 }
 
 
-void processSuperbugEvent(const Event &ev, Board &board, vector<const Bug *> &bugs, const Texture &crawlerTex,
+void processSuperbugEvent(const Event &ev, Board &board, vector<Bug *> &bugs, const Texture &crawlerTex,
                           const Texture &hopperTex, const Texture &bishopTex,
                           const Texture &superTex, vector<Sprite> &sprites, Font &font, vector<Text> &labels) {
     if (ev.type == Event::KeyPressed) {
         switch (ev.key.code) {
             case Keyboard::Up:
                 board.moveSuper(North);
-                board.fight();
 
                 break;
             case Keyboard::Down:
                 board.moveSuper(South);
-                board.fight();
 
                 break;
             case Keyboard::Left:
                 board.moveSuper(West);
-                board.fight();
 
                 break;
             case Keyboard::Right:
                 board.moveSuper(East);
-                board.fight();
 
                 break;
             default:
                 break;
         }
-        bugs = board.getBugs();
-        renderBug(bugs, crawlerTex, hopperTex, superTex, bishopTex, sprites, font, labels);
+
     }
 }
 
@@ -248,7 +242,7 @@ void display_window() {
     vector<RectangleShape> squares;
     Board board;
     board.loadBugs();
-    vector<const Bug *> bugs = board.getBugs();
+    vector<Bug *> bugs = board.getBugs();
     string type = bugs.at(0)->getBugType();
     vector<Sprite> bugSprites;
     Texture crawlerTex, hopperTex, superTex, bishop_texture;
@@ -262,7 +256,7 @@ void display_window() {
     bool simulation = false;
     renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites, font, labels);
     Clock clock;
-    const float interval = 0.1f;
+    const float interval = 1.0f;
     float time = 0.f;
     while (window.isOpen()) {
         Event event;
@@ -275,18 +269,18 @@ void display_window() {
                 board.tap();
                 board.fight();
                 bugs = board.getBugs();
+
                 bugSprites.clear();
                 renderBug(bugs, crawlerTex, hopperTex, superTex, bishop_texture, bugSprites, font, labels);
             }
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Enter) {
                 simulation = !simulation;
             }
-            if (event.type == Event::KeyPressed && (
-                    event.key.code == Keyboard::Down || event.key.code == Keyboard::Up || event.key.code ==
-                    Keyboard::Left || event.key.code == Keyboard::Right)) {
-                board.tap();
-                board.fight();
-            }
+
+                processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites, font,
+                                                labels);                // board.tap();
+
+
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num1) {
                 board.displayBugs();
             }
@@ -299,13 +293,11 @@ void display_window() {
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Num4) {
                 findBug(board);
             }
-
             if (event.type == Event::KeyPressed && event.key.code == Keyboard::Escape) {
                 board.writeHistoryToFile();
                 window.close();
             }
-            processSuperbugEvent(event, board, bugs, crawlerTex, hopperTex, bishop_texture, superTex, bugSprites, font,
-                                 labels);
+
         }
         float delta = clock.restart().asSeconds();
         time += delta;
