@@ -11,7 +11,7 @@
 using namespace std;
 using namespace sf;
 
-void display_window();
+void display_window(Board &board);
 
 
 void findBug(const Board &board) {
@@ -126,6 +126,10 @@ void menu(Board &board) {
                 break;
 
             case '8':
+                if (board.getBugs().size() == 0) {
+                    cout << "ERROR: You need to Initialize Bug Board first" << endl;
+                    break;
+                }
 
                 cout << endl;
                 cout << "1. Display all Bugs" << endl;
@@ -137,7 +141,7 @@ void menu(Board &board) {
                 cout << "Up/Down/Left/Right - move your superbug manually ";
                 cout << "Escape. Exit (write Life History of all Bugs to file)" << endl;
 
-                display_window();
+                display_window(board);
 
                 break;
 
@@ -233,13 +237,11 @@ void processSuperbugEvent(const Event &ev, Board &board) {
 }
 
 
-void display_window() {
+void display_window(Board &board) {
     Font font;
     font.loadFromFile("../assets/Trebuchet_MS.ttf");
     vector<Text> labels;
     vector<RectangleShape> squares;
-    Board board;
-    board.loadBugs();
     vector<Bug *> bugs = board.getBugs();
     string type = bugs.at(0)->getBugType();
     vector<Sprite> bugSprites;
