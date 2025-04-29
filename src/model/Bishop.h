@@ -18,6 +18,8 @@ class Bishop : public Bug {
 
     void displayBug() override;
 
+    [[nodiscard]] bool isWayBlocked() const;
+
 };
 
 

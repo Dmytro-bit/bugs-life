@@ -76,3 +76,29 @@ void Bishop::displayBug() {
             << setw(8) << (isAlive() ? "Alive" : "Dead")
             << setw(8) << getEatenBy() << endl;
 }
+
+bool Bishop::isWayBlocked() const {
+    switch (direction) {
+        case North:
+            if (position.y + 1 <= Board::getBoardSizeY() && position.x + 1 <= Board::getBoardSizeX()) {
+                return false;
+            }
+        break;
+        case East:
+            if (position.x + 1 <= Board::getBoardSizeX() && position.y -1 >= 0) {
+                return false;
+            }
+        break;
+        case South:
+            if (position.y - 1 >= 0 && position.x >= 0) {
+                return false;
+            }
+        break;
+        case West:
+            if (position.x - 1 >= 0 && position.y <= Board::getBoardSizeY()) {
+                return false;
+            }
+        break;
+    }
+    return true;
+}

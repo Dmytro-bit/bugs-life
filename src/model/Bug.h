@@ -25,7 +25,7 @@ protected:
 public:
     virtual void move() = 0;
 
-    [[nodiscard]] bool isWayBlocked() const;
+    [[nodiscard]] virtual bool isWayBlocked() const;
 
     virtual ~Bug() = default;
 
